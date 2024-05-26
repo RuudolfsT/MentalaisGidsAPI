@@ -9,11 +9,11 @@ namespace RepositoryLayer
 {
     public class SecretKeyGenerator
     {
-        public static byte[] GenerateSecretKey(int length = 32)
+        public static string GenerateSecretKey(int length = 32)
         {
             var key = new byte[length];
             RandomNumberGenerator.Fill(key);
-            return Encoding.ASCII.GetBytes(Convert.ToBase64String(key));
+            return Convert.ToBase64String(key);
         }
     }
 }

@@ -1,7 +1,9 @@
 using System.Configuration;
+using System.Text;
 using MentalaisGidsAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MentalaisGidsAPI
@@ -37,12 +39,21 @@ namespace MentalaisGidsAPI
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options => {
+                var key = builder.Configuration.GetSection("Jwt")["Secret"];
+
+                // sus????
+                if (string.IsNullOrEmpty(key)) {
+                    throw new ConfigurationErrorsException(
+                        $"No secret key found!"
+                        );
+                }
+
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
-                { 
+                {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(RepositoryLayer.SecretKeyGenerator.GenerateSecretKey()),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
@@ -64,7 +75,9 @@ namespace MentalaisGidsAPI
 
             app.MapControllers();
 
-            app.Run();
+            Console.WriteLine(RepositoryLayer.SecretKeyGenerator.GenerateSecretKey());
+
+            app.Run();            
         }
     }
 }
