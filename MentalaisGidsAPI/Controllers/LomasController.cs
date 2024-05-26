@@ -1,7 +1,5 @@
-﻿//using MentalaisGidsAPI.Models;
-using MentalaisGidsAPI.Domain;
+﻿using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
 namespace MentalaisGidsAPI.Controllers
