@@ -1,10 +1,16 @@
 using System.Configuration;
 using System.Text;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using MentalaisGidsAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using RepositoryLayer;
+using RepositoryLayer.Interface;
+using ServiceLayer;
+using ServiceLayer.Interface;
 
 namespace MentalaisGidsAPI
 {
@@ -30,35 +36,39 @@ namespace MentalaisGidsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<MentalaisGidsContext>(options =>
-            {
-                options.UseSqlServer(sus);
-            });
+            //builder.Services.AddDbContext<MentalaisGidsContext>(options =>
+            //{
+            //    options.UseSqlServer(sus);
+            //});
 
-            builder.Services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
-                var key = builder.Configuration.GetSection("Jwt")["Secret"];
-
-                // sus????
-                if (string.IsNullOrEmpty(key)) {
-                    throw new ConfigurationErrorsException(
-                        $"No secret key found!"
-                        );
-                }
-
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+            builder
+                .Services.AddAuthentication(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    var key = builder.Configuration.GetSection("Jwt")["Secret"];
 
+                    // sus????
+                    if (string.IsNullOrEmpty(key))
+                    {
+                        throw new ConfigurationErrorsException($"No secret key found!");
+                    }
+
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            builder.Services.AddScoped<ILomaManager, LomaManager>();
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -77,7 +87,7 @@ namespace MentalaisGidsAPI
 
             Console.WriteLine(RepositoryLayer.SecretKeyGenerator.GenerateSecretKey());
 
-            app.Run();            
+            app.Run();
         }
     }
 }

@@ -3,19 +3,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace MentalaisGidsAPI.Models;
+namespace MentalaisGidsAPI.Domain;
 
-public partial class LietotajsSpecialists
+public partial class LietotajsRakstsVertejums
 {
     public int LietotajsID { get; set; }
 
-    public int SpecialistsID { get; set; }
+    public int RakstsID { get; set; }
 
-    public bool PieteiksanasStatuss { get; set; }
-
-    public bool Blokets { get; set; }
+    public byte Balles { get; set; }
 
     public virtual Lietotajs Lietotajs { get; set; }
 
-    public virtual Lietotajs Specialists { get; set; }
+    public virtual Raksts Raksts { get; set; }
 }
