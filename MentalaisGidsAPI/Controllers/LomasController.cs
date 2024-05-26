@@ -1,4 +1,5 @@
 ﻿using MentalaisGidsAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,6 +7,7 @@ namespace MentalaisGidsAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LomasController : ControllerBase
     {
         private readonly MentalaisGidsContext _context;
