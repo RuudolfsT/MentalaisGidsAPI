@@ -1,10 +1,5 @@
 using System.Configuration;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using MentalaisGidsAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using RepositoryLayer;
-using RepositoryLayer.Interface;
 using ServiceLayer;
 using ServiceLayer.Interface;
 
@@ -32,12 +27,14 @@ namespace MentalaisGidsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddDbContext<MentalaisGidsContext>(options =>
-            //{
-            //    options.UseSqlServer(sus);
-            //});
+            builder.Services.AddDbContext<MentalaisGidsContext>(options =>
+            {
+                options.UseSqlServer(sus);
+            });
 
             builder.Services.AddScoped<ILomaManager, LomaManager>();
+            builder.Services.AddScoped<IRakstsManager, RakstsManager>();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
-    public class LomaManager : BaseManager<Loma>, ILomaManager
+    public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
         private readonly MentalaisGidsContext _context;
 
-        public LomaManager(MentalaisGidsContext context) : base(context)
+        public RakstsManager(MentalaisGidsContext context) : base(context)
         {
         }
 
