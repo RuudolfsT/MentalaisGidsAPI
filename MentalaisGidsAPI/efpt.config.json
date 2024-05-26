@@ -1,0 +1,118 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "MentalaisGidsContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "MentalaisGids",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Atbilde]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Dialogs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Jautajums]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Lietotajs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsAtbilde]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsLoma]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsRakstsKomentars]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsRakstsVertejums]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsSpecialists]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LietotajsSpecialistsVertejums]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Loma]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Nodarbiba]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Nozare]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Problema]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Raksts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SajutuNovertejums]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SpecialistsNozare]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tests]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Zina]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
