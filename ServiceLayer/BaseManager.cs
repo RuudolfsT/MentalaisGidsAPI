@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer
 {
-    public class LomaManager : BaseManager<Loma>, ILomaManager
+    public class BaseManager<T> : IBaseManager<T> where T : class
     {
         private readonly MentalaisGidsContext _context;
-
-        public LomaManager(MentalaisGidsContext context) : base(context)
+        public BaseManager(MentalaisGidsContext context)
         {
+            _context = context;
         }
 
-
-        //public BaseManager(ILomaRepository configurationRepository)
-        //{
-        //    _lomaRepository = configurationRepository;
-        //}
+        public async Task<T> FindById(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
     }
 }

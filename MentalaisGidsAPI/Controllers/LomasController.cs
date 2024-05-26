@@ -13,12 +13,13 @@ namespace MentalaisGidsAPI.Controllers
     [Authorize]
     public class LomasController : ControllerBase
     {
-        //private readonly MentalaisGidsContext _context;
         private ILomaManager _lomaManager;
+        private IRakstsManager _rakstsManager;
 
-        public LomasController(ILomaManager lomaManager)
+        public LomasController(ILomaManager lomaManager, IRakstsManager rakstsManager)
         {
             _lomaManager = lomaManager;
+            _rakstsManager = rakstsManager;
         }
 
         //// GET: api/Lomas
@@ -35,14 +36,14 @@ namespace MentalaisGidsAPI.Controllers
 
         // GET: api/Lomas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Loma>> GetLoma(int id)
+        public async Task<ActionResult<Raksts>> GetLoma(int id)
         {
             //if (_context.Loma == null)
             //{
             //    return NotFound();
             //}
             //var loma = await _context.Loma.FindAsync(id);
-            var loma = await _lomaManager.GetLoma(id);
+            var loma = await _rakstsManager.FindById(id);
             if (loma == null)
             {
                 return NotFound();

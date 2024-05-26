@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Interface
 {
-    public interface ILomaManager : IBaseManager<Loma>
+    public interface IRakstsManager : IBaseManager<Raksts>
     {
         //Task<Loma> GetLoma(int id);
     }

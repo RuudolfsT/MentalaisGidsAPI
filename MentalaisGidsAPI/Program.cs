@@ -1,14 +1,5 @@
 using System.Configuration;
-using System.Text;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using MentalaisGidsAPI.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
-using RepositoryLayer;
-using RepositoryLayer.Interface;
 using ServiceLayer;
 using ServiceLayer.Interface;
 
@@ -36,10 +27,10 @@ namespace MentalaisGidsAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddDbContext<MentalaisGidsContext>(options =>
-            //{
-            //    options.UseSqlServer(sus);
-            //});
+            builder.Services.AddDbContext<MentalaisGidsContext>(options =>
+            {
+                options.UseSqlServer(sus);
+            });
 
             builder
                 .Services.AddAuthentication(options =>
@@ -69,6 +60,8 @@ namespace MentalaisGidsAPI
                 });
 
             builder.Services.AddScoped<ILomaManager, LomaManager>();
+            builder.Services.AddScoped<IRakstsManager, RakstsManager>();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
