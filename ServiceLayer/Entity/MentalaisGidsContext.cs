@@ -2,9 +2,10 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using MentalaisGidsAPI.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentalaisGidsAPI.Models;
+namespace ServiceLayer;
 
 public partial class MentalaisGidsContext : DbContext
 {

@@ -1,6 +1,7 @@
 using System.Configuration;
-using MentalaisGidsAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using ServiceLayer;
+using ServiceLayer.Interface;
 
 namespace MentalaisGidsAPI
 {
@@ -30,6 +31,9 @@ namespace MentalaisGidsAPI
             {
                 options.UseSqlServer(sus);
             });
+
+            builder.Services.AddScoped<ILomaManager, LomaManager>();
+            builder.Services.AddScoped<IRakstsManager, RakstsManager>();
 
             var app = builder.Build();
 

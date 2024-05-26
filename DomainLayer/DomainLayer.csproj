@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.19" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+    <PackageReference Include="Castle.Windsor" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.19" />
   </ItemGroup>
 
 </Project>

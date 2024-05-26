@@ -3,19 +3,21 @@
 using System;
 using System.Collections.Generic;
 
-namespace MentalaisGidsAPI.Models;
+namespace MentalaisGidsAPI.Domain;
 
-public partial class Dialogs
+public partial class Nodarbiba
 {
-    public int DialogsID { get; set; }
-
-    public int LietotajsID { get; set; }
+    public int NodarbibaID { get; set; }
 
     public int SpecialistsID { get; set; }
+
+    public int? LietotajsID { get; set; }
+
+    public DateTime Sakums { get; set; }
+
+    public DateTime Beigas { get; set; }
 
     public virtual Lietotajs Lietotajs { get; set; }
 
     public virtual Lietotajs Specialists { get; set; }
-
-    public virtual ICollection<Zina> Zina { get; set; } = new List<Zina>();
 }
