@@ -2,6 +2,7 @@ using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer;
 using ServiceLayer.Interface;
+using ServiceLayer.Manager;
 
 namespace MentalaisGidsAPI
 {
@@ -34,6 +35,7 @@ namespace MentalaisGidsAPI
 
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
+            builder.Services.AddScoped<IZinaManager, ZinaManager>();
 
             var app = builder.Build();
 

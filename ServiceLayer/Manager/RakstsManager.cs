@@ -1,7 +1,7 @@
 ﻿using MentalaisGidsAPI.Domain;
 using ServiceLayer.Interface;
 
-namespace ServiceLayer
+namespace ServiceLayer.Manager
 {
     public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
