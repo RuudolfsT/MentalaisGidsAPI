@@ -1,11 +1,10 @@
-using System.Configuration;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ServiceLayer;
 using ServiceLayer.Interface;
+using System.Configuration;
+using System.Text;
 
 namespace MentalaisGidsAPI
 {
@@ -79,7 +78,7 @@ namespace MentalaisGidsAPI
 
             app.UseAuthorization();
 
-            app.MapControllers();            
+            app.MapControllers();
 
             app.Run();
         }

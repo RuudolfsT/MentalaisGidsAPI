@@ -1,17 +1,12 @@
-﻿using DomainLayer;
-using MentalaisGidsAPI.Domain;
-using ServiceLayer.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ServiceLayer.Interface;
 
 namespace ServiceLayer
 {
-    public class BaseManager<T> : IBaseManager<T> where T : class
+    public class BaseManager<T> : IBaseManager<T>
+        where T : class
     {
         private readonly MentalaisGidsContext _context;
+
         public BaseManager(MentalaisGidsContext context)
         {
             _context = context;

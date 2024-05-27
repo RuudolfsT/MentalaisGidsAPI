@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interface;
 
 namespace ServiceLayer
@@ -58,24 +52,42 @@ namespace ServiceLayer
             };
         }
 
-        public IEnumerable<Lietotajs> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Lietotajs GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Register(RegisterRequest model)
         {
-            throw new NotImplementedException();
+            if (_context.Lietotajs.Any(l => l.Lietotajvards == model.Lietotajvards))
+            {
+                //šāds lietotājs ar šādu lietotājvārdu jau ir, ko darīt?
+            }
+
+            var passwordHasher = new PasswordHasher<Lietotajs>();
+
+            Lietotajs newUser =
+                new()
+                {
+                    Lietotajvards = model.Lietotajvards,
+                    Vards = model.Vards,
+                    Uzvards = model.Uzvards,
+                    Epasts = model.Epasts,
+                    Dzimums = model.Dzimums
+                };
+
+            string hashedPassword = passwordHasher.HashPassword(newUser, model.Parole.ToString());
+
+            newUser.Parole = Encoding.UTF8.GetBytes(hashedPassword);
+
+            _context.Lietotajs.Add(newUser);
+            _context.SaveChanges();
         }
 
-        public void Delete()
+        public IEnumerable<Lietotajs> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Lietotajs;
+        }
+
+        public void Delete(Lietotajs model)
+        {
+            _context.Lietotajs.Remove(model);
+            _context.SaveChanges();
         }
     }
 }

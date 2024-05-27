@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DomainLayer.Auth;
+﻿using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
 
 namespace ServiceLayer.Interface
@@ -13,6 +8,6 @@ namespace ServiceLayer.Interface
         AuthenticateResponse? Authenticate(AuthenticateRequest model);
         IEnumerable<Lietotajs> GetAll();
         void Register(RegisterRequest model);
-        void Delete();
+        void Delete(Lietotajs model);
     }
 }
