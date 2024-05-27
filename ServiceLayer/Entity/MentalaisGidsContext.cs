@@ -112,10 +112,7 @@ public partial class MentalaisGidsContext : DbContext
             entity.Property(e => e.Lietotajvards)
                 .IsRequired()
                 .HasMaxLength(30);
-            entity.Property(e => e.Parole)
-                .IsRequired()
-                .HasMaxLength(64)
-                .IsFixedLength();
+            entity.Property(e => e.Parole).HasMaxLength(256);
             entity.Property(e => e.Uzvards)
                 .IsRequired()
                 .HasMaxLength(30);
