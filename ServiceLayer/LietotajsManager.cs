@@ -52,11 +52,11 @@ namespace ServiceLayer
             };
         }
 
-        public void Register(RegisterRequest model)
+        public RegisterResponse? Register(RegisterRequest model)
         {
             if (_context.Lietotajs.Any(l => l.Lietotajvards == model.Lietotajvards))
             {
-                //šāds lietotājs ar šādu lietotājvārdu jau ir, ko darīt?
+                return null;
             }
 
             var passwordHasher = new PasswordHasher<Lietotajs>();
@@ -77,6 +77,12 @@ namespace ServiceLayer
 
             _context.Lietotajs.Add(newUser);
             _context.SaveChanges();
+
+            return new RegisterResponse
+            {
+                LietotajsID = newUser.LietotajsID,
+                Lietotajvards = newUser.Lietotajvards
+            };
         }
 
         public IEnumerable<Lietotajs> GetAll()

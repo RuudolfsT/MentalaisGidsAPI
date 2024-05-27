@@ -27,6 +27,7 @@ namespace MentalaisGidsAPI.Controllers
             {
                 return Unauthorized();
             }
+
             return Ok(response);
         }
 
@@ -34,8 +35,16 @@ namespace MentalaisGidsAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterRequest model)
         {
-            _manager.Register(model);
-            return Ok();
+            var response = _manager.Register(model);
+
+            // TODO - te derētu kādu validāciju - vai db nobruka, vai lietotājs kaut ko ne tā
+            // šeit visdrīzāk lietotājs kaut ko ne tā
+            if (response == null)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         // GET: api/Lietotajs
