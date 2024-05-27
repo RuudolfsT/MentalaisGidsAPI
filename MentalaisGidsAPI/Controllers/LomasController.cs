@@ -1,4 +1,3 @@
-﻿//using MentalaisGidsAPI.Models;
 using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
