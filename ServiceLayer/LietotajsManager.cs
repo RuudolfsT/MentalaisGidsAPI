@@ -33,7 +33,7 @@ namespace ServiceLayer
 
             var verificationResult = passwordHasher.VerifyHashedPassword(
                 user,
-                user.Parole.ToString(),
+                user.Parole,
                 model.Parole
             );
 
@@ -71,9 +71,9 @@ namespace ServiceLayer
                     Dzimums = model.Dzimums
                 };
 
-            string hashedPassword = passwordHasher.HashPassword(newUser, model.Parole.ToString());
+            string hashedPassword = passwordHasher.HashPassword(newUser, model.Parole);
 
-            newUser.Parole = Encoding.UTF8.GetBytes(hashedPassword);
+            newUser.Parole = hashedPassword;
 
             _context.Lietotajs.Add(newUser);
             _context.SaveChanges();

@@ -22,6 +22,11 @@ namespace MentalaisGidsAPI.Controllers
         public IActionResult Authenticate(AuthenticateRequest model)
         {
             var response = _manager.Authenticate(model);
+
+            if (response == null)
+            {
+                return Unauthorized();
+            }
             return Ok(response);
         }
 
