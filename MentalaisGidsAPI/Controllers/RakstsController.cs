@@ -1,4 +1,5 @@
 ﻿using MentalaisGidsAPI.Domain;
+using MentalaisGidsAPI.Domain.dto;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interface;
 
@@ -15,17 +16,18 @@ namespace MentalaisGidsAPI.Controllers
             _rakstsManager = rakstsManager;
         }
 
-        // GET: api/Lomas/5
+        // GET: hujzin mosk api/Raksts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Raksts>> GetRaksts(int id)
+        public async Task<ActionResult<RakstsDto>> GetRaksts(int id)
         {
-            var loma = await _rakstsManager.FindById(id);
-            if (loma == null)
-            {
-                return NotFound();
-            }
+            return await _rakstsManager.Get(id);
+        }
 
-            return loma;
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<ActionResult<List<RakstsDto>>> GetAll()
+        {
+            return await _rakstsManager.GetAll();
         }
     }
 }

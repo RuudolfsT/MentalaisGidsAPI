@@ -1,9 +1,11 @@
 ﻿using MentalaisGidsAPI.Domain;
+using MentalaisGidsAPI.Domain.dto;
 
 namespace ServiceLayer.Interface
 {
     public interface IRakstsManager : IBaseManager<Raksts>
     {
-        //Task<Loma> GetLoma(int id);
+        Task<RakstsDto> Get(int id);
+        Task<List<RakstsDto>> GetAll();
     }
 }
