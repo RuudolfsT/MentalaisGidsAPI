@@ -36,6 +36,7 @@ namespace MentalaisGidsAPI
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
             builder.Services.AddScoped<IZinaManager, ZinaManager>();
+            builder.Services.AddScoped<IDialaogsManager, DialogsManager>();
 
             var app = builder.Build();
 

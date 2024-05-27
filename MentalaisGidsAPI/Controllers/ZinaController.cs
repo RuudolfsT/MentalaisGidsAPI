@@ -1,8 +1,6 @@
-﻿using MentalaisGidsAPI.Domain;
-using Microsoft.AspNetCore.Http;
+﻿using DomainLayer.dto;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interface;
-using ServiceLayer.Manager;
 
 namespace MentalaisGidsAPI.Controllers
 {
@@ -16,17 +14,28 @@ namespace MentalaisGidsAPI.Controllers
             _zinaManager = zinaManager;
         }
 
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Zina>> GetZina(int id)
+        public async Task<ActionResult<ZinaDto>> GetZina(int id)
         {
-            var zina = await _zinaManager.FindById(id);
+            var zina = await _zinaManager.GetZina(id);
             if (zina == null)
             {
                 return NotFound();
             }
-
             return zina;
         }
 
+
+        [HttpPost("post")]
+        public async Task<IActionResult> PostZina(int autorsId, int dialogsId, string saturs)
+        {
+            var result = await _zinaManager.PostZina(autorsId, dialogsId, saturs);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
     }
 }
