@@ -1,5 +1,9 @@
 using System.Configuration;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ServiceLayer;
 using ServiceLayer.Interface;
 
@@ -22,6 +26,31 @@ namespace MentalaisGidsAPI
                 );
             }
 
+            builder
+                .Services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)),
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
+
+            builder.Services.AddAuthorization();
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -32,32 +61,6 @@ namespace MentalaisGidsAPI
                 options.UseSqlServer(sus);
             });
 
-            builder
-                .Services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    var key = builder.Configuration.GetSection("Jwt")["Secret"];
-
-                    // sus????
-                    if (string.IsNullOrEmpty(key))
-                    {
-                        throw new ConfigurationErrorsException($"No secret key found!");
-                    }
-
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
 
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
@@ -70,15 +73,13 @@ namespace MentalaisGidsAPI
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthentication();
-
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.MapControllers();
-
-            Console.WriteLine(RepositoryLayer.SecretKeyGenerator.GenerateSecretKey());
+            app.MapControllers();            
 
             app.Run();
         }

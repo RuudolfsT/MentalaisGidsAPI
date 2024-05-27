@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
-using MentalaisGidsAPI.Models;
 
 namespace ServiceLayer.Interface
 {
-    internal interface ILietotajsManager
+    public interface ILietotajsManager : IBaseManager<Lietotajs>
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest model);
+        AuthenticateResponse? Authenticate(AuthenticateRequest model);
         IEnumerable<Lietotajs> GetAll();
-        Lietotajs GetById(int id);
+        void Register(RegisterRequest model);
+        void Delete();
     }
 }

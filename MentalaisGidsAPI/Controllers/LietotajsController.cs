@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MentalaisGidsAPI.Domain;
+using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ServiceLayer.Interface;
 
 namespace MentalaisGidsAPI.Controllers
 {
@@ -14,33 +16,29 @@ namespace MentalaisGidsAPI.Controllers
     [ApiController]
     public class LietotajsController : ControllerBase
     {
-        private readonly MentalaisGidsContext _context;
+        private ILietotajsManager _manager;
 
-        public LietotajsController(MentalaisGidsContext context)
+        public LietotajsController(ILietotajsManager manager)
         {
-            _context = context;
+            _manager = manager;
         }
 
         // GET: api/Lietotajs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Lietotajs>>> GetLietotajs()
         {
-            if (_context.Lietotajs == null)
+            if (_manager.Lietotajs == null)
             {
                 return NotFound();
             }
-            return await _context.Lietotajs.ToListAsync();
+            return await _manager.Lietotajs.ToListAsync();
         }
 
         // GET: api/Lietotajs/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Lietotajs>> GetLietotajs(int id)
         {
-            if (_context.Lietotajs == null)
-            {
-                return NotFound();
-            }
-            var lietotajs = await _context.Lietotajs.FindAsync(id);
+            var lietotajs = await _manager.FindById(id);
 
             if (lietotajs == null)
             {
@@ -60,11 +58,11 @@ namespace MentalaisGidsAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(lietotajs).State = EntityState.Modified;
+            _manager.Entry(lietotajs).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _manager.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -86,12 +84,12 @@ namespace MentalaisGidsAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Lietotajs>> PostLietotajs(Lietotajs lietotajs)
         {
-            if (_context.Lietotajs == null)
+            if (_manager.Lietotajs == null)
             {
                 return Problem("Entity set 'MentalaisGidsContext.Lietotajs'  is null.");
             }
-            _context.Lietotajs.Add(lietotajs);
-            await _context.SaveChangesAsync();
+            _manager.Lietotajs.Add(lietotajs);
+            await _manager.SaveChangesAsync();
 
             return CreatedAtAction("GetLietotajs", new { id = lietotajs.LietotajsID }, lietotajs);
         }
@@ -100,18 +98,18 @@ namespace MentalaisGidsAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLietotajs(int id)
         {
-            if (_context.Lietotajs == null)
+            if (_manager.Lietotajs == null)
             {
                 return NotFound();
             }
-            var lietotajs = await _context.Lietotajs.FindAsync(id);
+            var lietotajs = await _manager.Lietotajs.FindAsync(id);
             if (lietotajs == null)
             {
                 return NotFound();
             }
 
-            _context.Lietotajs.Remove(lietotajs);
-            await _context.SaveChangesAsync();
+            _manager.Lietotajs.Remove(lietotajs);
+            await _manager.SaveChangesAsync();
 
             return NoContent();
         }
@@ -123,7 +121,7 @@ namespace MentalaisGidsAPI.Controllers
 
         private bool LietotajsExists(int id)
         {
-            return (_context.Lietotajs?.Any(e => e.LietotajsID == id)).GetValueOrDefault();
+            return (_manager.Lietotajs?.Any(e => e.LietotajsID == id)).GetValueOrDefault();
         }
     }
 }

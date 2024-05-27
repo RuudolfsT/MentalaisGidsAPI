@@ -4,33 +4,58 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
-using MentalaisGidsAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using ServiceLayer.Interface;
 
 namespace ServiceLayer
 {
-    internal class LietotajsManager : ILietotajsManager
+    internal class LietotajsManager : BaseManager<Lietotajs>, ILietotajsManager
     {
-        private string _secret;
+        private readonly MentalaisGidsContext _context;
+        private IJwt _jwt;
 
-        public LietotajsManager(IConfiguration configuration)
+        public LietotajsManager(MentalaisGidsContext context, IJwt jwt)
+            : base(context)
         {
-            var key = configuration.GetSection("Jwt")["Secret"];
-
-            // sus????
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ConfigurationErrorsException($"No secret key found!");
-            }
-
-            _secret = key;
+            _jwt = jwt;
+            _context = context;
         }
 
-        public AuthenticateResponse Authenticate(AuthenticateRequest model)
+        public AuthenticateResponse? Authenticate(AuthenticateRequest model)
         {
-            throw new NotImplementedException();
+            var user = _context.Lietotajs.SingleOrDefault(l =>
+                l.Lietotajvards == model.Lietotajvards
+            );
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var passwordHasher = new PasswordHasher<Lietotajs>();
+
+            var verificationResult = passwordHasher.VerifyHashedPassword(
+                user,
+                user.Parole.ToString(),
+                model.Parole
+            );
+
+            if (verificationResult != PasswordVerificationResult.Success)
+            {
+                return null;
+            }
+
+            return new AuthenticateResponse
+            {
+                LietotajsID = user.LietotajsID,
+                Vards = user.Vards,
+                Uzvards = user.Uzvards,
+                Lietotajvards = user.Lietotajvards,
+                Token = _jwt.GenerateToken(user)
+            };
         }
 
         public IEnumerable<Lietotajs> GetAll()
@@ -39,6 +64,16 @@ namespace ServiceLayer
         }
 
         public Lietotajs GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Register(RegisterRequest model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete()
         {
             throw new NotImplementedException();
         }

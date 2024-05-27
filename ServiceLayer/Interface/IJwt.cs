@@ -7,8 +7,9 @@ using MentalaisGidsAPI.Domain;
 
 namespace ServiceLayer.Interface
 {
-    public interface IRakstsManager : IBaseManager<Raksts>
+    public interface IJwt
     {
-        //Task<Loma> GetLoma(int id);
+        public string GenerateToken(Lietotajs lietotajs);
+        public int? ValidateToken(string token);
     }
 }
