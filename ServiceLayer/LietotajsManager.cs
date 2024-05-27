@@ -6,7 +6,7 @@ using ServiceLayer.Interface;
 
 namespace ServiceLayer
 {
-    internal class LietotajsManager : BaseManager<Lietotajs>, ILietotajsManager
+    public class LietotajsManager : BaseManager<Lietotajs>, ILietotajsManager
     {
         private readonly MentalaisGidsContext _context;
         private IJwt _jwt;

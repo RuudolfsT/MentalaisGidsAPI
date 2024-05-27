@@ -63,6 +63,8 @@ namespace MentalaisGidsAPI
 
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
+            builder.Services.AddScoped<IJwt, Jwt>();
+            builder.Services.AddScoped<ILietotajsManager, LietotajsManager>();
 
             var app = builder.Build();
 

@@ -18,13 +18,15 @@ namespace MentalaisGidsAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("authenticate")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
             var response = _manager.Authenticate(model);
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpPost("register")]
         public IActionResult Register(RegisterRequest model)
         {
             _manager.Register(model);
