@@ -1,7 +1,7 @@
-﻿using System.Text;
-using DomainLayer.Auth;
+﻿using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
 namespace ServiceLayer
@@ -20,9 +20,10 @@ namespace ServiceLayer
 
         public AuthenticateResponse? Authenticate(AuthenticateRequest model)
         {
-            var user = _context.Lietotajs.SingleOrDefault(l =>
-                l.Lietotajvards == model.Lietotajvards
-            );
+            var user = _context
+                .Lietotajs.Include(l => l.LietotajsLoma)
+                .ThenInclude(ll => ll.LomaNosaukumsNavigation)
+                .SingleOrDefault(l => l.Lietotajvards == model.Lietotajvards);
 
             if (user == null)
             {

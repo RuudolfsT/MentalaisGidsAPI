@@ -48,7 +48,12 @@ namespace MentalaisGidsAPI
                     };
                 });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admins", policy => policy.RequireRole("Admins"));
+                options.AddPolicy("Speciālists", policy => policy.RequireRole("Speciālists"));
+                options.AddPolicy("Parastais lietotājs", policy => policy.RequireRole("Parastais lietotājs"));
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

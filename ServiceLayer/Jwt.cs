@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using MentalaisGidsAPI.Domain;
@@ -32,7 +33,11 @@ namespace ServiceLayer
                 new("userid", lietotajs.LietotajsID.ToString())
             };
 
-            // TODO - te vajadzēs mehānismu kā pielikt Lomas (Lomas konvertē par jaunu claim un pievieno 'claims' sarakstam)
+            var userRoles = lietotajs.LietotajsLoma.Select(ll =>
+                ll.LomaNosaukumsNavigation.LomaNosaukums
+            );
+
+            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

@@ -68,5 +68,21 @@ namespace MentalaisGidsAPI.Controllers
 
             return lietotajs;
         }
+
+        [Authorize(Roles = "Admins")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Lietotajs>> DeleteLietotajs(int id)
+        {
+            var lietotajs = await _manager.FindById(id);
+
+            if (lietotajs == null)
+            {
+                return NotFound();
+            }
+
+            _manager.Delete(lietotajs);
+
+            return Ok();
+        }
     }
 }
