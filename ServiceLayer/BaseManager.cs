@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
 namespace ServiceLayer
 {
-    public class BaseManager<T> : IBaseManager<T> where T : class
+    public class BaseManager<T> : IBaseManager<T>
+        where T : class
     {
         private readonly MentalaisGidsContext _context;
+
         public BaseManager(MentalaisGidsContext context)
         {
             _context = context;

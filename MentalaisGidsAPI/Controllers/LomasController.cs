@@ -1,4 +1,5 @@
-﻿using MentalaisGidsAPI.Domain;
+using MentalaisGidsAPI.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interface;
 
@@ -6,6 +7,7 @@ namespace MentalaisGidsAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LomasController : ControllerBase
     {
         private ILomaManager _lomaManager;
