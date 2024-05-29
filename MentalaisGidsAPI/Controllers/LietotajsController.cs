@@ -11,10 +11,12 @@ namespace MentalaisGidsAPI.Controllers
     public class LietotajsController : ControllerBase
     {
         private ILietotajsManager _manager;
+        private IUserService _userService;
 
-        public LietotajsController(ILietotajsManager manager)
+        public LietotajsController(ILietotajsManager manager, IUserService userService)
         {
             _manager = manager;
+            _userService = userService;
         }
 
         [AllowAnonymous]
@@ -48,6 +50,7 @@ namespace MentalaisGidsAPI.Controllers
         }
 
         // GET: api/Lietotajs
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Lietotajs>>> GetLietotajs()
         {
