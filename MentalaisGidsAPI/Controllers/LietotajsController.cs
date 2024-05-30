@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Auth;
+using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,7 +73,7 @@ namespace MentalaisGidsAPI.Controllers
             return lietotajs;
         }
 
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = RoleUtils.Admins)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Lietotajs>> DeleteLietotajs(int id)
         {
