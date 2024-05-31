@@ -42,7 +42,7 @@ namespace ServiceLayer
             return entity;
         }
 
-        public async void Delete(T entity)
+        public async Task Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();

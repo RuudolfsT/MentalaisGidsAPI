@@ -8,6 +8,5 @@ namespace ServiceLayer.Interface
         AuthenticateResponse? Authenticate(AuthenticateRequest model);
         IEnumerable<Lietotajs> GetAll();
         RegisterResponse? Register(RegisterRequest model);
-        void Delete(Lietotajs model);
     }
 }
