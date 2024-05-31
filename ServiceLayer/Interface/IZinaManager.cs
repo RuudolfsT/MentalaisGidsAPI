@@ -5,8 +5,8 @@ namespace ServiceLayer.Interface
 {
     public interface IZinaManager : IBaseManager<Zina>
     {
-        Task<ZinaDto> GetZina(int zinaId);
-        Task<bool> PostZina(int userId, int dialogueId, string zina);
+        Task<List<ZinaDto>> GetZinas(int dialogsId);
+        Task<bool> PostZina(int receiverId, string zina);
     }
 }
     
