@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ServiceLayer;
 using ServiceLayer.Interface;
+using ServiceLayer.Manager;
 using System.Configuration;
 using System.Text;
 
@@ -69,6 +70,8 @@ namespace MentalaisGidsAPI
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
+            builder.Services.AddScoped<IZinaManager, ZinaManager>();
+            builder.Services.AddScoped<IDialogsManager, DialogsManager>();
             builder.Services.AddScoped<IJwt, Jwt>();
             builder.Services.AddScoped<ILietotajsManager, LietotajsManager>();
 

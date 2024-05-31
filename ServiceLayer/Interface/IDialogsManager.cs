@@ -2,7 +2,7 @@
 
 namespace ServiceLayer.Interface
 {
-    public interface IDialaogsManager : IBaseManager<Dialogs>
+    public interface IDialogsManager : IBaseManager<Dialogs>
     {
         Task<bool> StopDialogue(int dialogueId);
     }

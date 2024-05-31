@@ -3,6 +3,7 @@ using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
+using ServiceLayer.Manager;
 
 namespace ServiceLayer
 {
