@@ -10,6 +10,6 @@
         public string Saturs { get; set; }
         public DateTime DatumsUnLaiks { get; set; }
         public int ? Vertejums { get; set; }
-        public List<KomentarsDto> Komentari { get; set; }
+        public List<KomentarsDto> ? Komentari { get; set; }
     }
 }

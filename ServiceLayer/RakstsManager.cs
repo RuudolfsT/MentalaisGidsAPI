@@ -102,7 +102,7 @@ namespace ServiceLayer
 
         }
 
-        public async Task<RakstsRateResultDto> Rate(RakstsRateDto rating, int user_id, int id)
+        public async Task<RakstsRateResponseDto> Rate(RakstsRateDto rating, int user_id, int id)
         {
             var user = await _context.Lietotajs.FindAsync(user_id);
             var raksts = await _context.Raksts.FindAsync(id);
@@ -120,10 +120,34 @@ namespace ServiceLayer
                 Balles = rating.Balles
             });
             
-            return new RakstsRateResultDto
+            return new RakstsRateResponseDto
             {
                 RakstsID = id,
                 Balles = rating.Balles
+            };
+        }
+
+        public async Task<RakstsCreateResponseDto> Create(RakstsCreateDto new_raksts_dto, int user_id)
+        {
+            var user = await _context.Lietotajs.FindAsync(user_id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            // call BaseManager method "SaveOrUpdate" to save the rating to LietotajsRakstsVertejums
+            var new_raksts = await SaveOrUpdate(new Raksts
+            {
+                SpecialistsID = user_id,
+                Virsraksts = new_raksts_dto.Virsraksts,
+                Saturs = new_raksts_dto.Saturs,
+                DatumsUnLaiks = DateTime.UtcNow
+            });
+
+            return new RakstsCreateResponseDto()
+            {
+                RakstsID = new_raksts.RakstsID
             };
         }
 
