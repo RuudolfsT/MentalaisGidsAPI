@@ -1,5 +1,6 @@
 ﻿using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.dto;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
@@ -7,11 +8,13 @@ namespace ServiceLayer
 {
     public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
-        private MentalaisGidsContext _context;
+        private readonly MentalaisGidsContext _context;
+        private readonly ILietotajsRakstsVertejumsManager _lietotajsRakstsVertejumsManager;
 
-        public RakstsManager(MentalaisGidsContext context) : base(context)
+        public RakstsManager(MentalaisGidsContext context, ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager) : base(context)
         {
             _context = context;
+            _lietotajsRakstsVertejumsManager = lietotajsRakstsVertejumsManager;
         }
 
         public async Task<RakstsDto> Get(int id)
@@ -79,7 +82,7 @@ namespace ServiceLayer
                 Virsraksts = raksts.Virsraksts,
                 Saturs = raksts.Saturs,
                 DatumsUnLaiks = raksts.DatumsUnLaiks,
-                Vertejums = (int?) _context.LietotajsRakstsVertejums
+                Vertejums = (int?)_context.LietotajsRakstsVertejums
                     .Where(lrv => lrv.RakstsID == raksts.RakstsID)
                     .Select(lrv => (int?)lrv.Balles)
                     .DefaultIfEmpty()
@@ -98,5 +101,31 @@ namespace ServiceLayer
             return dtos;
 
         }
+
+        public async Task<RakstsRateResultDto> Rate(RakstsRateDto rating, int user_id, int id)
+        {
+            var user = await _context.Lietotajs.FindAsync(user_id);
+            var raksts = await _context.Raksts.FindAsync(id);
+
+            if (user == null || raksts == null)
+            {
+                return null;
+            }
+
+            // call BaseManager method "SaveOrUpdate" to save the rating to LietotajsRakstsVertejums
+            await _lietotajsRakstsVertejumsManager.SaveOrUpdate(new LietotajsRakstsVertejums
+            {
+                LietotajsID = user_id,
+                RakstsID = id,
+                Balles = rating.Balles
+            });
+            
+            return new RakstsRateResultDto
+            {
+                RakstsID = id,
+                Balles = rating.Balles
+            };
+        }
+
     }
 }
