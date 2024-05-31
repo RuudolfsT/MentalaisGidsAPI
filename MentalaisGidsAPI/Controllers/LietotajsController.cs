@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Auth;
+using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace MentalaisGidsAPI.Controllers
     public class LietotajsController : ControllerBase
     {
         private ILietotajsManager _manager;
+        private IUserService _userService;
 
-        public LietotajsController(ILietotajsManager manager)
+        public LietotajsController(ILietotajsManager manager, IUserService userService)
         {
             _manager = manager;
+            _userService = userService;
         }
 
         [AllowAnonymous]
@@ -48,6 +51,7 @@ namespace MentalaisGidsAPI.Controllers
         }
 
         // GET: api/Lietotajs
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Lietotajs>>> GetLietotajs()
         {
@@ -69,7 +73,7 @@ namespace MentalaisGidsAPI.Controllers
             return lietotajs;
         }
 
-        [Authorize(Roles = "Admins")]
+        [Authorize(Roles = RoleUtils.Admins)]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Lietotajs>> DeleteLietotajs(int id)
         {

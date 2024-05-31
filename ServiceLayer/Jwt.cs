@@ -1,11 +1,11 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using MentalaisGidsAPI.Domain;
+﻿using MentalaisGidsAPI.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ServiceLayer.Interface;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace ServiceLayer
 {
@@ -30,7 +30,7 @@ namespace ServiceLayer
             {
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Sub, lietotajs.Lietotajvards),
-                new("userid", lietotajs.LietotajsID.ToString())
+                new(CustomClaimTypes.UserId, lietotajs.LietotajsID.ToString())
             };
 
             var userRoles = lietotajs.LietotajsLoma.Select(ll =>

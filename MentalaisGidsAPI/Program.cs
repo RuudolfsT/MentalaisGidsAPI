@@ -65,7 +65,8 @@ namespace MentalaisGidsAPI
                 options.UseSqlServer(sus);
             });
 
-
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ILomaManager, LomaManager>();
             builder.Services.AddScoped<IRakstsManager, RakstsManager>();
             builder.Services.AddScoped<IJwt, Jwt>();
