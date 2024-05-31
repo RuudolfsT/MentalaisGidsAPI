@@ -24,9 +24,9 @@ namespace ServiceLayer
             if (entry.State == EntityState.Detached)
             {
                 var set = _context.Set<T>();
-                var key = _context.Model?.FindEntityType(typeof(T))?.FindPrimaryKey()?.Properties?.FirstOrDefault();
-                var keyValue = key?.PropertyInfo?.GetValue(entity, null);
-                var exists = set.Find(keyValue);
+                var keys = _context.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties;
+                var keyValues = keys.Select(k => k.PropertyInfo.GetValue(entity)).ToArray();
+                var exists = set.Find(keyValues);
 
                 if (exists != null)
                 {
