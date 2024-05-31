@@ -7,10 +7,8 @@ namespace ServiceLayer.Manager
     {
         private readonly MentalaisGidsContext _context;
 
-        public RakstsManager(MentalaisGidsContext context) : base(context)
-        {
-        }
-
+        public RakstsManager(MentalaisGidsContext context)
+            : base(context) { }
 
         //public BaseManager(ILomaRepository configurationRepository)
         //{

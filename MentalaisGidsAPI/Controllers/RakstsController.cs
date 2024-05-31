@@ -19,13 +19,13 @@ namespace MentalaisGidsAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Raksts>> GetRaksts(int id)
         {
-            var loma = await _rakstsManager.FindById(id);
-            if (loma == null)
+            var raksts = await _rakstsManager.FindById(id);
+            if (raksts == null)
             {
                 return NotFound();
             }
 
-            return loma;
+            return raksts;
         }
     }
 }

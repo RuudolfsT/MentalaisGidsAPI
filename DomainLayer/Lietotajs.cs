@@ -21,7 +21,7 @@ public partial class Lietotajs
 
     public string Epasts { get; set; }
 
-    public byte[] Parole { get; set; }
+    public string Parole { get; set; }
 
     public bool Anonimitate { get; set; }
 
