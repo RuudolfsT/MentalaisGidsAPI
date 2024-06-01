@@ -84,7 +84,7 @@ namespace MentalaisGidsAPI.Controllers
                 return NotFound();
             }
 
-            _manager.Delete(lietotajs);
+            await _manager.Delete(lietotajs);
 
             return Ok();
         }

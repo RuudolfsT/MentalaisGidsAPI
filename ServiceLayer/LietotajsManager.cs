@@ -91,10 +91,18 @@ namespace ServiceLayer
             return _context.Lietotajs;
         }
 
-        public void Delete(Lietotajs model)
-        {
-            _context.Lietotajs.Remove(model);
-            _context.SaveChanges();
-        }
+        //public void Delete(Lietotajs model)
+        //{
+        //    _context.Lietotajs.Remove(model);
+        //    _context.SaveChanges();
+        //}
+
+
+        //public async Task<LietotajsLoma> AssignLoma(int userId, int roleId)
+        //{
+
+
+        //}
+
     }
 }
