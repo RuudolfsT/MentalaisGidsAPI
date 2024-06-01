@@ -7,7 +7,7 @@ namespace ServiceLayer.Interface
     {
         Task<RakstsDto> Get(int id);
         Task<List<RakstsDto>> GetAll();
-        Task<RakstsRateResponseDto> Rate(RakstsRateDto rating, int user_id, int id);
         Task<RakstsCreateResponseDto> Create(RakstsCreateDto rating, int user_id);
+        Task<bool> Delete(int raksts_id, int user_id);
     }
 }

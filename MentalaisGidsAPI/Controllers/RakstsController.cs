@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ServiceLayer.Interface;
 using System.Net;
+using System.Security.Claims;
 
 namespace MentalaisGidsAPI.Controllers
 {
@@ -14,12 +15,14 @@ namespace MentalaisGidsAPI.Controllers
     public class RakstsController : ControllerBase
     {
         private IRakstsManager _rakstsManager;
+        private ILietotajsRakstsVertejumsManager _lietotajsRakstsVertejumsManager;
         private IUserService _userService;
 
-        public RakstsController(IRakstsManager rakstsManager, IUserService userService)
+        public RakstsController(IRakstsManager rakstsManager, IUserService userService, ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager)
         {
             _rakstsManager = rakstsManager;
             _userService = userService;
+            _lietotajsRakstsVertejumsManager = lietotajsRakstsVertejumsManager;
         }
 
         // GET: hujzin mosk api/Raksts/5
@@ -45,7 +48,7 @@ namespace MentalaisGidsAPI.Controllers
             {
                 var user_id = _userService.GetUserId();
 
-                var response = await _rakstsManager.Rate(rating, user_id, id);
+                var response = await _lietotajsRakstsVertejumsManager.CreateOrUpdate(rating, user_id, id);
 
                 return Ok(response);
             }
@@ -56,7 +59,7 @@ namespace MentalaisGidsAPI.Controllers
             }
         }
 
-        [Authorize(Roles = RoleUtils.Admins)]
+        [Authorize(Roles = RoleUtils.Specialists)]
         [HttpPost("create")]
         public async Task<IActionResult> Create(RakstsCreateDto new_raksts_dto)
         {
@@ -74,6 +77,25 @@ namespace MentalaisGidsAPI.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
             }
 
+        }
+
+        [Authorize(Roles = RoleUtils.Specialists + "," + RoleUtils.Admins)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user_id = _userService.GetUserId();
+            var user_roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+
+            var success = await _rakstsManager.Delete(id, user_id, user_roles);
+
+            if (success)
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
+            }
         }
     }
 }

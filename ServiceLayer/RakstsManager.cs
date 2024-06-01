@@ -1,6 +1,6 @@
-﻿using MentalaisGidsAPI.Domain;
+﻿using DomainLayer.Enum;
+using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.dto;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
@@ -9,12 +9,10 @@ namespace ServiceLayer
     public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
         private readonly MentalaisGidsContext _context;
-        private readonly ILietotajsRakstsVertejumsManager _lietotajsRakstsVertejumsManager;
 
-        public RakstsManager(MentalaisGidsContext context, ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager) : base(context)
+        public RakstsManager(MentalaisGidsContext context) : base(context)
         {
             _context = context;
-            _lietotajsRakstsVertejumsManager = lietotajsRakstsVertejumsManager;
         }
 
         public async Task<RakstsDto> Get(int id)
@@ -102,31 +100,6 @@ namespace ServiceLayer
 
         }
 
-        public async Task<RakstsRateResponseDto> Rate(RakstsRateDto rating, int user_id, int id)
-        {
-            var user = await _context.Lietotajs.FindAsync(user_id);
-            var raksts = await _context.Raksts.FindAsync(id);
-
-            if (user == null || raksts == null)
-            {
-                return null;
-            }
-
-            // call BaseManager method "SaveOrUpdate" to save the rating to LietotajsRakstsVertejums
-            await _lietotajsRakstsVertejumsManager.SaveOrUpdate(new LietotajsRakstsVertejums
-            {
-                LietotajsID = user_id,
-                RakstsID = id,
-                Balles = rating.Balles
-            });
-            
-            return new RakstsRateResponseDto
-            {
-                RakstsID = id,
-                Balles = rating.Balles
-            };
-        }
-
         public async Task<RakstsCreateResponseDto> Create(RakstsCreateDto new_raksts_dto, int user_id)
         {
             var user = await _context.Lietotajs.FindAsync(user_id);
@@ -150,6 +123,24 @@ namespace ServiceLayer
                 RakstsID = new_raksts.RakstsID
             };
         }
+
+        public async Task<bool> Delete(int raksts_id, int user_id, List<string> user_roles)
+        {
+            var raksts = await _context.Raksts.FindAsync(raksts_id);
+
+            if (raksts == null)
+            {
+                return false;
+            }
+
+            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id))
+            {
+                await Delete(raksts);
+            }
+
+            _context.Raksts.Remove(raksts);
+            await _context.SaveChangesAsync();
+        }   
 
     }
 }
