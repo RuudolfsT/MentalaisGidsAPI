@@ -20,14 +20,15 @@ namespace MentalaisGidsAPI.Controllers
         private IUserService _userService;
         private ILomaManager _lomaManager;
         private ILietotajsLomaManager _lietotajsLomaManager;
+        private ILietotajsSpecialistsVertejumsManager _lietotajsSpecialistsVertejumsManager;
 
-
-        public LietotajsController(ILietotajsManager manager, IUserService userService, ILomaManager lomaManager, ILietotajsLomaManager lietotajsLomaManager)
+        public LietotajsController(ILietotajsManager manager, IUserService userService, ILomaManager lomaManager, ILietotajsLomaManager lietotajsLomaManager, ILietotajsSpecialistsVertejumsManager lietotajsSpecialistsVertejumsManager)
         {
             _lietotajsManager = manager;
             _userService = userService;
             _lomaManager = lomaManager;
             _lietotajsLomaManager = lietotajsLomaManager;
+            _lietotajsSpecialistsVertejumsManager = lietotajsSpecialistsVertejumsManager;
         }
 
         [AllowAnonymous]
@@ -101,20 +102,24 @@ namespace MentalaisGidsAPI.Controllers
         [Authorize(Roles = RoleUtils.Admins)]
         [HttpPost]
         [Route("AssignRole")]
-        public async Task<ActionResult<Lietotajs>> AssignRole(LietotajsLomaDto lietotajsLomaDto)
+        public async Task<ActionResult<Status>> AssignRole(LietotajsLomaDto lietotajsLomaDto)
         {
+            var status = new Status(true);
+
             var userId = lietotajsLomaDto.LietotajsId;
             var isValidUser = await _lietotajsManager.UserExists(userId);
             if (!isValidUser)
             {
-                return BadRequest(Resources.UserDoesntExist);
+                status.AddError(Resources.UserDoesntExist);
+                return status;
             }
 
             var roleName = lietotajsLomaDto.LomasNosaukums;
             var isValidRole = await _lomaManager.RoleExists(roleName);
             if (!isValidRole)
             {
-                return BadRequest(Resources.RoleDoesntExist);
+                status.AddError(Resources.RoleDoesntExist);
+                return status;
             }
 
             var lietotajsLoma = new LietotajsLoma
@@ -124,7 +129,7 @@ namespace MentalaisGidsAPI.Controllers
             };
 
             await _lietotajsLomaManager.SaveOrUpdate(lietotajsLoma);
-            return Ok();
+            return Ok(status);
         }
 
         [Authorize(Roles = RoleUtils.Visi)]
@@ -214,6 +219,42 @@ namespace MentalaisGidsAPI.Controllers
 
             _lietotajsManager.SaveOrUpdate(user);
             return status;
+        }
+
+        [Authorize(Roles = RoleUtils.Visi)]
+        [HttpPost("Rate")]
+        public async Task<Status> Rate(SpecialistsRateDto specialistsRateDto)
+        {
+            var status = new Status(true);
+            var rating = specialistsRateDto.Vertejums;
+            if (rating <= 0 || rating >= 11)
+            {
+                status.AddError(Resources.InvalidRating);
+                return status;
+            }
+
+            var specialistId = specialistsRateDto.SpecialistaId;
+            var isValidSpecialistId = await _lietotajsManager.UserExists(specialistId);
+            if (!isValidSpecialistId)
+            {
+                status.AddError(Resources.UserDoesntExist);
+                return status;
+            }
+
+            var userId = _userService.GetUserId();
+            status = await _lietotajsSpecialistsVertejumsManager.CreateOrUpdate(rating, userId, specialistId);
+
+            return status;
+        }
+
+        [Authorize(Roles = RoleUtils.Visi)]
+        [HttpGet("GetAllRates")]
+        public async Task<List<LietotajsSpecialistsVertejums>> GetAllRates()
+        {
+            var userId = _userService.GetUserId();
+            var allUserRates = await _lietotajsSpecialistsVertejumsManager.GetAllUserRates(userId);
+
+            return allUserRates;
         }
     }
 }
