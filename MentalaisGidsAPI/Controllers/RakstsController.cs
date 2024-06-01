@@ -16,22 +16,28 @@ namespace MentalaisGidsAPI.Controllers
     {
         private IRakstsManager _rakstsManager;
         private ILietotajsRakstsVertejumsManager _lietotajsRakstsVertejumsManager;
+        private ILietotajsRakstsKomentarsManager _lietotajsRakstsKomentarsManager;
         private IUserService _userService;
 
-        public RakstsController(IRakstsManager rakstsManager, IUserService userService, ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager)
+        public RakstsController(IRakstsManager rakstsManager,
+            IUserService userService,
+            ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager,
+            ILietotajsRakstsKomentarsManager lietotajsRakstsKomentarsManager)
         {
             _rakstsManager = rakstsManager;
             _userService = userService;
             _lietotajsRakstsVertejumsManager = lietotajsRakstsVertejumsManager;
+            _lietotajsRakstsKomentarsManager = lietotajsRakstsKomentarsManager;
         }
 
-        // GET: hujzin mosk api/Raksts/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<RakstsDto>> GetRaksts(int id)
         {
             return await _rakstsManager.Get(id);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetAll")]
         public async Task<ActionResult<List<RakstsDto>>> GetAll()
@@ -39,8 +45,16 @@ namespace MentalaisGidsAPI.Controllers
             return await _rakstsManager.GetAll();
         }
 
-        // TODO - jānoskaidro kuras lomas nar novērtēt rakstu
-        [Authorize]
+        [Authorize(Roles = RoleUtils.Specialists)]
+        [HttpGet]
+        [Route("GetAll/my-posts")]
+        public async Task<ActionResult<List<RakstsDto>>> GetAllSpecialistsPosts()
+        {
+            var user_id = _userService.GetUserId();
+            return await _rakstsManager.GetAll(user_id);
+        }
+
+        [Authorize(Roles = RoleUtils.ParastsLietotajs + "," + RoleUtils.Specialists)]
         [HttpPost("rate/{id}")]
         public async Task<IActionResult> Rate(int id, RakstsRateDto rating)
         {
@@ -59,7 +73,7 @@ namespace MentalaisGidsAPI.Controllers
             }
         }
 
-        [Authorize(Roles = RoleUtils.Specialists)]
+        [Authorize(Roles = RoleUtils.Specialists + "," + RoleUtils.Admins)]
         [HttpPost("create")]
         public async Task<IActionResult> Create(RakstsCreateDto new_raksts_dto)
         {
@@ -95,6 +109,58 @@ namespace MentalaisGidsAPI.Controllers
             else
             {
                 return StatusCode((int)HttpStatusCode.BadRequest);
+            }
+        }
+
+        [Authorize(Roles = RoleUtils.Specialists + "," + RoleUtils.Admins)]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, RakstsUpdateDto updated_raksts)
+        {
+            if (ModelState.IsValid)
+            {
+                var user_id = _userService.GetUserId();
+                var user_roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+
+                var success = await _rakstsManager.Update(id, user_id, user_roles, updated_raksts);
+
+                if (success)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
+            }
+            else
+                {
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
+            }
+        }
+        [Authorize]
+        [HttpPost("{id}/create-comment")]
+        public async Task<IActionResult> CreateKomentars(int id, RakstsKomentarsCreateDto komentars)
+        {
+            if (ModelState.IsValid)
+            {
+                var user_id = _userService.GetUserId();
+
+                var success = await _lietotajsRakstsKomentarsManager.CreateOrUpdate(komentars, user_id, id);
+
+                if (success)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest);
+                }
+            }
+            else
+            {
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
             }
         }
     }

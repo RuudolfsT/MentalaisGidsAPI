@@ -3,6 +3,8 @@ using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.dto;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace ServiceLayer
 {
@@ -15,6 +17,10 @@ namespace ServiceLayer
             _context = context;
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_VIEW
+         */
         public async Task<RakstsDto> Get(int id)
         {
             var raksts = await _context.Raksts
@@ -49,7 +55,8 @@ namespace ServiceLayer
                         Uzvards = komentars.Lietotajs.Uzvards,
                         Saturs = komentars.Saturs,
                         DatumsUnLaiks = komentars.DatumsUnLaiks
-                    }).ToList()
+                    }).ToList(),
+                    KomentariCount = null
                 };
 
                 return dto;
@@ -58,18 +65,22 @@ namespace ServiceLayer
             return null;
         }
 
-
-        //public BaseManager(ILomaRepository configurationRepository)
-        //{
-        //    _lomaRepository = configurationRepository;
-        //}
-
-        public async Task<List<RakstsDto>> GetAll()
+        /*
+         * Darījumprasības:
+         * BLOG_LIST_VIEW
+         * 
+         * Iespēja gan skatīt visus rakstus, gan pēc speciālista ID (kas atbilst darījumprasībām)
+         */
+        public async Task<List<RakstsDto>> GetAll(int? specialistsId = null)
         {
+            var query = _context.Raksts.AsQueryable();
+            if (specialistsId != null)
+            {
+                query = query.Where(raksts => raksts.SpecialistsID == specialistsId.Value);
+            }
 
-            var dtos = await _context.Raksts
+            var dtos = await query
             .Include(raksts => raksts.LietotajsRakstsKomentars)
-            .ThenInclude(komentars => komentars.Lietotajs)
             .Include(raksts => raksts.Specialists)
             .Select(raksts => new RakstsDto
             {
@@ -85,21 +96,18 @@ namespace ServiceLayer
                     .Select(lrv => (int?)lrv.Balles)
                     .DefaultIfEmpty()
                     .Average() ?? null, // Calculate average here
-                Komentari = raksts.LietotajsRakstsKomentars
-                .Select(komentars => new KomentarsDto
-                {
-                    LietotajsID = komentars.LietotajsID,
-                    Vards = komentars.Lietotajs.Vards,
-                    Uzvards = komentars.Lietotajs.Uzvards,
-                    Saturs = komentars.Saturs,
-                    DatumsUnLaiks = komentars.DatumsUnLaiks
-                }).ToList()
+                Komentari = null,
+                KomentariCount = raksts.LietotajsRakstsKomentars.Count
             }).ToListAsync();
 
             return dtos;
 
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_CREATE
+         */
         public async Task<RakstsCreateResponseDto> Create(RakstsCreateDto new_raksts_dto, int user_id)
         {
             var user = await _context.Lietotajs.FindAsync(user_id);
@@ -124,23 +132,53 @@ namespace ServiceLayer
             };
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_DEL
+         * ADMIN_BLOG_DEL
+         */
         public async Task<bool> Delete(int raksts_id, int user_id, List<string> user_roles)
         {
-            var raksts = await _context.Raksts.FindAsync(raksts_id);
+            var raksts = await FindById(raksts_id);
 
             if (raksts == null)
             {
                 return false;
             }
 
-            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id))
+            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id)
             {
                 await Delete(raksts);
+                return true;
             }
 
-            _context.Raksts.Remove(raksts);
-            await _context.SaveChangesAsync();
-        }   
+            return false;
 
+        }
+
+        /*
+         * Darījumprasības:
+         * BLOG_EDIT
+         * ADMIN_BLOG_EDIT
+         */
+        public async Task<bool> Update(int id, int user_id, List<string> user_roles, RakstsUpdateDto updated_raksts)
+        {
+            var raksts = await FindById(id);
+
+            if (raksts == null)
+            {
+                return false;
+            }
+
+            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id)
+            {
+                if (updated_raksts.Virsraksts != null) raksts.Virsraksts = updated_raksts.Virsraksts;
+                if (updated_raksts.Saturs != null) raksts.Saturs = updated_raksts.Saturs;
+                await SaveOrUpdate(raksts);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

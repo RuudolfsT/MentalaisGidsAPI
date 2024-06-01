@@ -13,6 +13,10 @@ namespace ServiceLayer
             _context = context;
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_RATE
+         */
         public async Task<RakstsRateResponseDto> CreateOrUpdate(RakstsRateDto rating, int user_id, int id)
         {
             var user = await _context.Lietotajs.FindAsync(user_id);
