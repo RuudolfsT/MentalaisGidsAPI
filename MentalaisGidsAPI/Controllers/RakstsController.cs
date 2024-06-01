@@ -77,19 +77,10 @@ namespace MentalaisGidsAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(RakstsCreateDto new_raksts_dto)
         {
-            if (ModelState.IsValid)
-            {
-                var user_id = _userService.GetUserId();
+            var user_id = _userService.GetUserId();
+            var response = await _rakstsManager.Create(new_raksts_dto, user_id);
 
-                var response = await _rakstsManager.Create(new_raksts_dto, user_id);
-
-                return Ok(response);
-            }
-            else
-            {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
-            }
+            return Ok(response);
 
         }
 
@@ -116,51 +107,37 @@ namespace MentalaisGidsAPI.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> Update(int id, RakstsUpdateDto updated_raksts)
         {
-            if (ModelState.IsValid)
+    
+            var user_id = _userService.GetUserId();
+            var user_roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+
+            var success = await _rakstsManager.Update(id, user_id, user_roles, updated_raksts);
+
+            if (success)
             {
-                var user_id = _userService.GetUserId();
-                var user_roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-
-                var success = await _rakstsManager.Update(id, user_id, user_roles, updated_raksts);
-
-                if (success)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.BadRequest);
-                }
+                return Ok();
             }
             else
-                {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
         }
+
         [Authorize]
         [HttpPost("{id}/create-comment")]
         public async Task<IActionResult> CreateKomentars(int id, RakstsKomentarsCreateDto komentars)
         {
-            if (ModelState.IsValid)
+            var user_id = _userService.GetUserId();
+
+            var success = await _lietotajsRakstsKomentarsManager.CreateOrUpdate(komentars, user_id, id);
+
+            if (success)
             {
-                var user_id = _userService.GetUserId();
-
-                var success = await _lietotajsRakstsKomentarsManager.CreateOrUpdate(komentars, user_id, id);
-
-                if (success)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return StatusCode((int)HttpStatusCode.BadRequest);
-                }
+                return Ok();
             }
             else
             {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
         }
     }
