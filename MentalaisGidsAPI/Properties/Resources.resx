@@ -123,6 +123,9 @@
   <data name="InvalidPermissionsToEdit" xml:space="preserve">
     <value>Invalid permissions to edit other users</value>
   </data>
+  <data name="InvalidRating" xml:space="preserve">
+    <value>Rating must be from 1 to 10</value>
+  </data>
   <data name="PasswordTooShort" xml:space="preserve">
     <value>Password must be atleast 8 symbols long</value>
   </data>

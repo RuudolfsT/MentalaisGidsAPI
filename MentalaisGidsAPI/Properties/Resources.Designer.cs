@@ -79,6 +79,15 @@ namespace MentalaisGidsAPI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rating must be from 1 to 10.
+        /// </summary>
+        internal static string InvalidRating {
+            get {
+                return ResourceManager.GetString("InvalidRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password must be atleast 8 symbols long.
         /// </summary>
         internal static string PasswordTooShort {
