@@ -1,5 +1,5 @@
 ﻿using MentalaisGidsAPI.Domain;
-using MentalaisGidsAPI.Domain.dto;
+using MentalaisGidsAPI.Domain.Dto;
 using ServiceLayer.Interface;
 
 namespace ServiceLayer

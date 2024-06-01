@@ -1,6 +1,6 @@
 ﻿using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
-using MentalaisGidsAPI.Domain.dto;
+using MentalaisGidsAPI.Domain.Dto;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;

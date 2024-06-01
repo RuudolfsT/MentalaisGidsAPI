@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MentalaisGidsAPI.Domain.dto
+namespace MentalaisGidsAPI.Domain.Dto
 {
     public class RakstsCreateDto
     {

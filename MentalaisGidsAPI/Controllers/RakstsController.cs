@@ -1,6 +1,6 @@
 ﻿using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
-using MentalaisGidsAPI.Domain.dto;
+using MentalaisGidsAPI.Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

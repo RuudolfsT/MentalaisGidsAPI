@@ -7,12 +7,13 @@ namespace ServiceLayer
     {
         private readonly MentalaisGidsContext _context;
 
-        public LomaManager(MentalaisGidsContext context)
-            : base(context) { }
+        public LomaManager(MentalaisGidsContext context) : base(context) {
+            _context = context;
+        }
 
-        //public BaseManager(ILomaRepository configurationRepository)
-        //{
-        //    _lomaRepository = configurationRepository;
-        //}
+        public async Task<bool> RoleExists(string id)
+        {
+            return _context.Set<Loma>().Any(x => x.LomaNosaukums == id);
+        }
     }
 }
