@@ -74,7 +74,7 @@ namespace MentalaisGidsAPI
             builder.Services.AddScoped<IJwt, Jwt>();
             builder.Services.AddScoped<ILietotajsManager, LietotajsManager>();
             builder.Services.AddScoped(typeof(IBaseManager<>), typeof(BaseManager<>));
-
+            builder.Services.AddScoped<ILietotajsLomaManager, LietotajsLomaManager>();
 
             var app = builder.Build();
 

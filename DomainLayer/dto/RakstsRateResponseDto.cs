@@ -1,4 +1,4 @@
-﻿namespace MentalaisGidsAPI.Domain.dto
+﻿namespace MentalaisGidsAPI.Domain.Dto
 {
     public class RakstsRateResponseDto
     {
