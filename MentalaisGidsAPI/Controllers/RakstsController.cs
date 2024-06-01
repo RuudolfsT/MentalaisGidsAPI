@@ -58,19 +58,11 @@ namespace MentalaisGidsAPI.Controllers
         [HttpPost("rate/{id}")]
         public async Task<IActionResult> Rate(int id, RakstsRateDto rating)
         {
-            if (ModelState.IsValid)
-            {
                 var user_id = _userService.GetUserId();
 
                 var response = await _lietotajsRakstsVertejumsManager.CreateOrUpdate(rating, user_id, id);
 
                 return Ok(response);
-            }
-            else
-            {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                return StatusCode((int)HttpStatusCode.BadRequest, allErrors);
-            }
         }
 
         [Authorize(Roles = RoleUtils.Specialists + "," + RoleUtils.Admins)]
