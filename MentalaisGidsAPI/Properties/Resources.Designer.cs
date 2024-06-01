@@ -61,6 +61,33 @@ namespace MentalaisGidsAPI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is invalid, must contain @ symbol.
+        /// </summary>
+        internal static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid permissions to edit other users.
+        /// </summary>
+        internal static string InvalidPermissionsToEdit {
+            get {
+                return ResourceManager.GetString("InvalidPermissionsToEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must be atleast 8 symbols long.
+        /// </summary>
+        internal static string PasswordTooShort {
+            get {
+                return ResourceManager.GetString("PasswordTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role does not exist.
         /// </summary>
         internal static string RoleDoesntExist {
@@ -75,6 +102,24 @@ namespace MentalaisGidsAPI.Properties {
         internal static string UserDoesntExist {
             get {
                 return ResourceManager.GetString("UserDoesntExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username already exists.
+        /// </summary>
+        internal static string UsernameAlreadyExists {
+            get {
+                return ResourceManager.GetString("UsernameAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date is invalid, must be in format dd-MM-yyyy.
+        /// </summary>
+        internal static string WrongDateFormat {
+            get {
+                return ResourceManager.GetString("WrongDateFormat", resourceCulture);
             }
         }
     }

@@ -12,5 +12,6 @@
         public const string ParastsLietotajs = "Parastais lietotājs";
         public const string Specialists = "Speciālists";
         public const string Admins = "Admins";
+        public const string Visi = $"{ParastsLietotajs},{Specialists},{Admins}";
     }
 }
