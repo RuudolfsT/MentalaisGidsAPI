@@ -117,10 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Email is invalid, must contain @ symbol</value>
+  </data>
+  <data name="InvalidPermissionsToEdit" xml:space="preserve">
+    <value>Invalid permissions to edit other users</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Password must be atleast 8 symbols long</value>
+  </data>
   <data name="RoleDoesntExist" xml:space="preserve">
     <value>Role does not exist</value>
   </data>
   <data name="UserDoesntExist" xml:space="preserve">
     <value>User does not exist</value>
+  </data>
+  <data name="UsernameAlreadyExists" xml:space="preserve">
+    <value>Username already exists</value>
+  </data>
+  <data name="WrongDateFormat" xml:space="preserve">
+    <value>Date is invalid, must be in format dd-MM-yyyy</value>
   </data>
 </root>

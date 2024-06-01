@@ -1,11 +1,14 @@
-﻿using DomainLayer.Auth;
+﻿using DomainLayer;
+using DomainLayer.Auth;
 using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.Dto;
 using MentalaisGidsAPI.Properties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ServiceLayer.Interface;
+using System.Security.Claims;
 
 namespace MentalaisGidsAPI.Controllers
 {
@@ -122,6 +125,95 @@ namespace MentalaisGidsAPI.Controllers
 
             await _lietotajsLomaManager.SaveOrUpdate(lietotajsLoma);
             return Ok();
+        }
+
+        [Authorize(Roles = RoleUtils.Visi)]
+        [HttpPost("EditUser")]
+        public async Task<Status> EditUser(LietotajsEditDto lietotajsEditDto)
+        {
+            var status = new Status(true);
+            var currentUserId = _userService.GetUserId();
+
+            if (currentUserId != lietotajsEditDto.LietotajsId)
+            {
+                var isUserAdmin = User.FindAll(ClaimTypes.Role).Select(r => r.Value).Any(x => x == RoleUtils.Admins);
+                if (!isUserAdmin)
+                {
+                    status.AddError(Resources.InvalidPermissionsToEdit);
+                    return status;
+                }
+            }
+
+            var userId = lietotajsEditDto.LietotajsId;
+            var user = await _lietotajsManager.FindById(userId);
+            if (user == null)
+            {
+                status.AddError(Resources.UserDoesntExist);
+                return status;
+            }
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.Vards))
+            {
+                user.Vards = lietotajsEditDto.Vards;
+            }
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.Uzvards))
+            {
+                user.Uzvards = lietotajsEditDto.Uzvards;
+            }
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.Lietotajvards))
+            {
+                var usernameExists = await _lietotajsManager.UsernameExists(lietotajsEditDto.Lietotajvards);
+                if (usernameExists)
+                {
+                    status.AddError(Resources.UsernameAlreadyExists);
+                    return status;
+                }
+
+                user.Lietotajvards = lietotajsEditDto.Lietotajvards;
+            }
+
+            user.Dzimums = lietotajsEditDto.Dzimums ?? user.Dzimums;
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.Epasts))
+            {
+                if (!lietotajsEditDto.Epasts.Contains("@"))
+                {
+                    status.AddError(Resources.InvalidEmail);
+                    return status;
+                }
+
+                user.Epasts = lietotajsEditDto.Epasts;
+            }
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.DzimsanasGads))
+            {
+                var format = "dd-MM-yyyy";
+                DateTime date;
+                var success = DateTime.TryParseExact(lietotajsEditDto.DzimsanasGads, format, null, System.Globalization.DateTimeStyles.None, out date);
+                if (!success)
+                {
+                    status.AddError(Resources.WrongDateFormat);
+                }
+
+                user.DzimsanasGads = date;
+            }
+
+            if (!string.IsNullOrEmpty(lietotajsEditDto.Parole))
+            {
+                if (lietotajsEditDto.Parole.Length < 8)
+                {
+                    status.AddError(Resources.PasswordTooShort);
+                    return status;
+                }
+
+                var newPassword = _lietotajsManager.HashPassword(lietotajsEditDto.Parole, user);
+                user.Parole = newPassword;
+            }
+
+            _lietotajsManager.SaveOrUpdate(user);
+            return status;
         }
     }
 }
