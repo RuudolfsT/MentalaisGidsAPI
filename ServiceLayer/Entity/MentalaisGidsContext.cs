@@ -52,7 +52,7 @@ public partial class MentalaisGidsContext : DbContext
     {
         modelBuilder.Entity<Atbilde>(entity =>
         {
-            entity.HasKey(e => e.AtbildeID).HasName("PK__Atbilde__12BB1745F16AF3A1");
+            entity.HasKey(e => e.AtbildeID).HasName("PK__Atbilde__12BB17456A83B806");
 
             entity.Property(e => e.Saturs)
                 .IsRequired()
@@ -61,32 +61,32 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Jautajums).WithMany(p => p.Atbilde)
                 .HasForeignKey(d => d.JautajumsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Atbilde__Jautaju__6FE99F9F");
+                .HasConstraintName("FK__Atbilde__Jautaju__18B6AB08");
 
             entity.HasOne(d => d.Problema).WithMany(p => p.Atbilde)
                 .HasForeignKey(d => d.ProblemaID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Atbilde__Problem__6EF57B66");
+                .HasConstraintName("FK__Atbilde__Problem__17C286CF");
         });
 
         modelBuilder.Entity<Dialogs>(entity =>
         {
-            entity.HasKey(e => e.DialogsID).HasName("PK__Dialogs__CD256F28F68668B4");
+            entity.HasKey(e => e.DialogsID).HasName("PK__Dialogs__CD256F2800E10ACB");
 
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.DialogsLietotajs)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Dialogs__Lietota__46E78A0C");
+                .HasConstraintName("FK__Dialogs__Lietota__6FB49575");
 
             entity.HasOne(d => d.Specialists).WithMany(p => p.DialogsSpecialists)
                 .HasForeignKey(d => d.SpecialistsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Dialogs__Special__47DBAE45");
+                .HasConstraintName("FK__Dialogs__Special__70A8B9AE");
         });
 
         modelBuilder.Entity<Jautajums>(entity =>
         {
-            entity.HasKey(e => e.JautajumsID).HasName("PK__Jautajum__42AB49203B688682");
+            entity.HasKey(e => e.JautajumsID).HasName("PK__Jautajum__42AB49201352C691");
 
             entity.Property(e => e.Saturs)
                 .IsRequired()
@@ -95,14 +95,14 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Tests).WithMany(p => p.Jautajums)
                 .HasForeignKey(d => d.TestsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Jautajums__Tests__6C190EBB");
+                .HasConstraintName("FK__Jautajums__Tests__14E61A24");
         });
 
         modelBuilder.Entity<Lietotajs>(entity =>
         {
-            entity.HasKey(e => e.LietotajsID).HasName("PK__Lietotaj__70B93406BD1FA973");
+            entity.HasKey(e => e.LietotajsID).HasName("PK__Lietotaj__70B934068C1996CB");
 
-            entity.HasIndex(e => e.Lietotajvards, "UQ__Lietotaj__FD0064119C183A73").IsUnique();
+            entity.HasIndex(e => e.Lietotajvards, "UQ__Lietotaj__FD006411869F02D6").IsUnique();
 
             entity.Property(e => e.DzimsanasGads).HasColumnType("date");
             entity.Property(e => e.Epasts)
@@ -126,11 +126,11 @@ public partial class MentalaisGidsContext : DbContext
                     r => r.HasOne<Atbilde>().WithMany()
                         .HasForeignKey("AtbildeID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Lietotajs__Atbil__73BA3083"),
+                        .HasConstraintName("FK__Lietotajs__Atbil__1C873BEC"),
                     l => l.HasOne<Lietotajs>().WithMany()
                         .HasForeignKey("LietotajsID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Lietotajs__Lieto__72C60C4A"),
+                        .HasConstraintName("FK__Lietotajs__Lieto__1B9317B3"),
                     j =>
                     {
                         j.HasKey("LietotajsID", "AtbildeID").HasName("LietotajsAtbildeID");
@@ -142,11 +142,11 @@ public partial class MentalaisGidsContext : DbContext
                     r => r.HasOne<Nozare>().WithMany()
                         .HasForeignKey("NozareID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Specialis__Nozar__5535A963"),
+                        .HasConstraintName("FK__Specialis__Nozar__7E02B4CC"),
                     l => l.HasOne<Lietotajs>().WithMany()
                         .HasForeignKey("SpecialistsID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Specialis__Speci__5441852A"),
+                        .HasConstraintName("FK__Specialis__Speci__7D0E9093"),
                     j =>
                     {
                         j.HasKey("SpecialistsID", "NozareID").HasName("SpecialistsNozareID");
@@ -155,7 +155,7 @@ public partial class MentalaisGidsContext : DbContext
 
         modelBuilder.Entity<LietotajsLoma>(entity =>
         {
-            entity.HasKey(e => e.LietotajsLomaID).HasName("PK__Lietotaj__8607944642009C84");
+            entity.HasKey(e => e.LietotajsLomaID).HasName("PK__Lietotaj__86079446C361565D");
 
             entity.Property(e => e.LietotajsLomaID).ValueGeneratedNever();
             entity.Property(e => e.LomaNosaukums)
@@ -164,13 +164,11 @@ public partial class MentalaisGidsContext : DbContext
 
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.LietotajsLoma)
                 .HasForeignKey(d => d.LietotajsID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Lieto__3C69FB99");
+                .HasConstraintName("FK__Lietotajs__Lieto__65370702");
 
             entity.HasOne(d => d.LomaNosaukumsNavigation).WithMany(p => p.LietotajsLoma)
                 .HasForeignKey(d => d.LomaNosaukums)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__LomaN__3D5E1FD2");
+                .HasConstraintName("FK__Lietotajs__LomaN__662B2B3B");
         });
 
         modelBuilder.Entity<LietotajsRakstsKomentars>(entity =>
@@ -185,12 +183,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.LietotajsRakstsKomentars)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Lieto__5DCAEF64");
+                .HasConstraintName("FK__Lietotajs__Lieto__0697FACD");
 
             entity.HasOne(d => d.Raksts).WithMany(p => p.LietotajsRakstsKomentars)
                 .HasForeignKey(d => d.RakstsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Rakst__5EBF139D");
+                .HasConstraintName("FK__Lietotajs__Rakst__078C1F06");
         });
 
         modelBuilder.Entity<LietotajsRakstsVertejums>(entity =>
@@ -200,12 +198,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.LietotajsRakstsVertejums)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Lieto__656C112C");
+                .HasConstraintName("FK__Lietotajs__Lieto__0E391C95");
 
             entity.HasOne(d => d.Raksts).WithMany(p => p.LietotajsRakstsVertejums)
                 .HasForeignKey(d => d.RakstsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Rakst__66603565");
+                .HasConstraintName("FK__Lietotajs__Rakst__0F2D40CE");
         });
 
         modelBuilder.Entity<LietotajsSpecialists>(entity =>
@@ -215,12 +213,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.LietotajsSpecialistsLietotajs)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Lieto__619B8048");
+                .HasConstraintName("FK__Lietotajs__Lieto__0A688BB1");
 
             entity.HasOne(d => d.Specialists).WithMany(p => p.LietotajsSpecialistsSpecialists)
                 .HasForeignKey(d => d.SpecialistsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Speci__628FA481");
+                .HasConstraintName("FK__Lietotajs__Speci__0B5CAFEA");
         });
 
         modelBuilder.Entity<LietotajsSpecialistsVertejums>(entity =>
@@ -230,17 +228,17 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.LietotajsSpecialistsVertejumsLietotajs)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Lieto__4316F928");
+                .HasConstraintName("FK__Lietotajs__Lieto__6BE40491");
 
             entity.HasOne(d => d.Specialists).WithMany(p => p.LietotajsSpecialistsVertejumsSpecialists)
                 .HasForeignKey(d => d.SpecialistsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Lietotajs__Speci__440B1D61");
+                .HasConstraintName("FK__Lietotajs__Speci__6CD828CA");
         });
 
         modelBuilder.Entity<Loma>(entity =>
         {
-            entity.HasKey(e => e.LomaNosaukums).HasName("PK__Loma__3AB8408CE27A5A9A");
+            entity.HasKey(e => e.LomaNosaukums).HasName("PK__Loma__3AB8408C401D9BE5");
 
             entity.Property(e => e.LomaNosaukums).HasMaxLength(30);
             entity.Property(e => e.Apraksts)
@@ -250,24 +248,24 @@ public partial class MentalaisGidsContext : DbContext
 
         modelBuilder.Entity<Nodarbiba>(entity =>
         {
-            entity.HasKey(e => e.NodarbibaID).HasName("PK__Nodarbib__406B1BA152D62645");
+            entity.HasKey(e => e.NodarbibaID).HasName("PK__Nodarbib__406B1BA1F0443FBA");
 
             entity.Property(e => e.Beigas).HasColumnType("datetime");
             entity.Property(e => e.Sakums).HasColumnType("datetime");
 
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.NodarbibaLietotajs)
                 .HasForeignKey(d => d.LietotajsID)
-                .HasConstraintName("FK__Nodarbiba__Lieto__4BAC3F29");
+                .HasConstraintName("FK__Nodarbiba__Lieto__74794A92");
 
             entity.HasOne(d => d.Specialists).WithMany(p => p.NodarbibaSpecialists)
                 .HasForeignKey(d => d.SpecialistsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Nodarbiba__Speci__4AB81AF0");
+                .HasConstraintName("FK__Nodarbiba__Speci__73852659");
         });
 
         modelBuilder.Entity<Nozare>(entity =>
         {
-            entity.HasKey(e => e.NozareID).HasName("PK__Nozare__41508836C4FD488A");
+            entity.HasKey(e => e.NozareID).HasName("PK__Nozare__41508836B86CECC5");
 
             entity.Property(e => e.Nosaukums)
                 .IsRequired()
@@ -276,7 +274,7 @@ public partial class MentalaisGidsContext : DbContext
 
         modelBuilder.Entity<Problema>(entity =>
         {
-            entity.HasKey(e => e.ProblemaID).HasName("PK__Problema__498C544EF07FB80B");
+            entity.HasKey(e => e.ProblemaID).HasName("PK__Problema__498C544E3E88A871");
 
             entity.Property(e => e.Apraksts)
                 .IsRequired()
@@ -285,12 +283,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Nozare).WithMany(p => p.Problema)
                 .HasForeignKey(d => d.NozareID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Problema__Nozare__5812160E");
+                .HasConstraintName("FK__Problema__Nozare__00DF2177");
         });
 
         modelBuilder.Entity<Raksts>(entity =>
         {
-            entity.HasKey(e => e.RakstsID).HasName("PK__Raksts__02D56CB068A78222");
+            entity.HasKey(e => e.RakstsID).HasName("PK__Raksts__02D56CB039ADB4D7");
 
             entity.Property(e => e.DatumsUnLaiks).HasColumnType("datetime");
             entity.Property(e => e.Saturs)
@@ -303,12 +301,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Specialists).WithMany(p => p.Raksts)
                 .HasForeignKey(d => d.SpecialistsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Raksts__Speciali__5AEE82B9");
+                .HasConstraintName("FK__Raksts__Speciali__03BB8E22");
         });
 
         modelBuilder.Entity<SajutuNovertejums>(entity =>
         {
-            entity.HasKey(e => e.IerakstsID).HasName("PK__SajutuNo__E8D112DD610B63AB");
+            entity.HasKey(e => e.IerakstsID).HasName("PK__SajutuNo__E8D112DDDACF78AB");
 
             entity.Property(e => e.DatumsUnLaiks).HasColumnType("datetime");
             entity.Property(e => e.SajutuNovertejums1).HasColumnName("SajutuNovertejums");
@@ -319,12 +317,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Lietotajs).WithMany(p => p.SajutuNovertejums)
                 .HasForeignKey(d => d.LietotajsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SajutuNov__Lieto__403A8C7D");
+                .HasConstraintName("FK__SajutuNov__Lieto__690797E6");
         });
 
         modelBuilder.Entity<Tests>(entity =>
         {
-            entity.HasKey(e => e.TestsID).HasName("PK__Tests__A208744B7FE4A418");
+            entity.HasKey(e => e.TestsID).HasName("PK__Tests__A208744BFE5751F8");
 
             entity.Property(e => e.Apraksts)
                 .IsRequired()
@@ -333,12 +331,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Autors).WithMany(p => p.Tests)
                 .HasForeignKey(d => d.AutorsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tests__AutorsID__693CA210");
+                .HasConstraintName("FK__Tests__AutorsID__1209AD79");
         });
 
         modelBuilder.Entity<Zina>(entity =>
         {
-            entity.HasKey(e => e.ZinaID).HasName("PK__Zina__0D3B510BA31CE948");
+            entity.HasKey(e => e.ZinaID).HasName("PK__Zina__0D3B510B344E0ACA");
 
             entity.Property(e => e.DatumsUnLaiks).HasColumnType("datetime");
             entity.Property(e => e.Saturs)
@@ -348,12 +346,12 @@ public partial class MentalaisGidsContext : DbContext
             entity.HasOne(d => d.Autors).WithMany(p => p.Zina)
                 .HasForeignKey(d => d.AutorsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Zina__AutorsID__4F7CD00D");
+                .HasConstraintName("FK__Zina__AutorsID__7849DB76");
 
             entity.HasOne(d => d.Dialogs).WithMany(p => p.Zina)
                 .HasForeignKey(d => d.DialogsID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Zina__DialogsID__4E88ABD4");
+                .HasConstraintName("FK__Zina__DialogsID__7755B73D");
         });
 
         OnModelCreatingPartial(modelBuilder);
