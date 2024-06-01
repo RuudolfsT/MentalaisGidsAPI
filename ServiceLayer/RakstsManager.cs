@@ -1,22 +1,26 @@
-﻿using MentalaisGidsAPI.Domain;
+﻿using DomainLayer.Enum;
+using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.dto;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace ServiceLayer
 {
     public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
         private readonly MentalaisGidsContext _context;
-        private readonly ILietotajsRakstsVertejumsManager _lietotajsRakstsVertejumsManager;
 
-        public RakstsManager(MentalaisGidsContext context, ILietotajsRakstsVertejumsManager lietotajsRakstsVertejumsManager) : base(context)
+        public RakstsManager(MentalaisGidsContext context) : base(context)
         {
             _context = context;
-            _lietotajsRakstsVertejumsManager = lietotajsRakstsVertejumsManager;
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_VIEW
+         */
         public async Task<RakstsDto> Get(int id)
         {
             var raksts = await _context.Raksts
@@ -51,7 +55,8 @@ namespace ServiceLayer
                         Uzvards = komentars.Lietotajs.Uzvards,
                         Saturs = komentars.Saturs,
                         DatumsUnLaiks = komentars.DatumsUnLaiks
-                    }).ToList()
+                    }).ToList(),
+                    KomentariCount = null
                 };
 
                 return dto;
@@ -60,18 +65,22 @@ namespace ServiceLayer
             return null;
         }
 
-
-        //public BaseManager(ILomaRepository configurationRepository)
-        //{
-        //    _lomaRepository = configurationRepository;
-        //}
-
-        public async Task<List<RakstsDto>> GetAll()
+        /*
+         * Darījumprasības:
+         * BLOG_LIST_VIEW
+         * 
+         * Iespēja gan skatīt visus rakstus, gan pēc speciālista ID (kas atbilst darījumprasībām)
+         */
+        public async Task<List<RakstsDto>> GetAll(int? specialistsId = null)
         {
+            var query = _context.Raksts.AsQueryable();
+            if (specialistsId != null)
+            {
+                query = query.Where(raksts => raksts.SpecialistsID == specialistsId.Value);
+            }
 
-            var dtos = await _context.Raksts
+            var dtos = await query
             .Include(raksts => raksts.LietotajsRakstsKomentars)
-            .ThenInclude(komentars => komentars.Lietotajs)
             .Include(raksts => raksts.Specialists)
             .Select(raksts => new RakstsDto
             {
@@ -87,45 +96,89 @@ namespace ServiceLayer
                     .Select(lrv => (int?)lrv.Balles)
                     .DefaultIfEmpty()
                     .Average() ?? null, // Calculate average here
-                Komentari = raksts.LietotajsRakstsKomentars
-                .Select(komentars => new KomentarsDto
-                {
-                    LietotajsID = komentars.LietotajsID,
-                    Vards = komentars.Lietotajs.Vards,
-                    Uzvards = komentars.Lietotajs.Uzvards,
-                    Saturs = komentars.Saturs,
-                    DatumsUnLaiks = komentars.DatumsUnLaiks
-                }).ToList()
+                Komentari = null,
+                KomentariCount = raksts.LietotajsRakstsKomentars.Count
             }).ToListAsync();
 
             return dtos;
 
         }
 
-        public async Task<RakstsRateResultDto> Rate(RakstsRateDto rating, int user_id, int id)
+        /*
+         * Darījumprasības:
+         * BLOG_CREATE
+         */
+        public async Task<RakstsCreateResponseDto> Create(RakstsCreateDto new_raksts_dto, int user_id)
         {
             var user = await _context.Lietotajs.FindAsync(user_id);
-            var raksts = await _context.Raksts.FindAsync(id);
 
-            if (user == null || raksts == null)
+            if (user == null)
             {
                 return null;
             }
 
             // call BaseManager method "SaveOrUpdate" to save the rating to LietotajsRakstsVertejums
-            await _lietotajsRakstsVertejumsManager.SaveOrUpdate(new LietotajsRakstsVertejums
+            var new_raksts = await SaveOrUpdate(new Raksts
             {
-                LietotajsID = user_id,
-                RakstsID = id,
-                Balles = rating.Balles
+                SpecialistsID = user_id,
+                Virsraksts = new_raksts_dto.Virsraksts,
+                Saturs = new_raksts_dto.Saturs,
+                DatumsUnLaiks = DateTime.UtcNow
             });
-            
-            return new RakstsRateResultDto
+
+            return new RakstsCreateResponseDto()
             {
-                RakstsID = id,
-                Balles = rating.Balles
+                RakstsID = new_raksts.RakstsID
             };
         }
 
+        /*
+         * Darījumprasības:
+         * BLOG_DEL
+         * ADMIN_BLOG_DEL
+         */
+        public async Task<bool> Delete(int raksts_id, int user_id, List<string> user_roles)
+        {
+            var raksts = await FindById(raksts_id);
+
+            if (raksts == null)
+            {
+                return false;
+            }
+
+            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id)
+            {
+                await Delete(raksts);
+                return true;
+            }
+
+            return false;
+
+        }
+
+        /*
+         * Darījumprasības:
+         * BLOG_EDIT
+         * ADMIN_BLOG_EDIT
+         */
+        public async Task<bool> Update(int id, int user_id, List<string> user_roles, RakstsUpdateDto updated_raksts)
+        {
+            var raksts = await FindById(id);
+
+            if (raksts == null)
+            {
+                return false;
+            }
+
+            if (user_roles.Contains(RoleUtils.Admins) || raksts.SpecialistsID == user_id)
+            {
+                if (updated_raksts.Virsraksts != null) raksts.Virsraksts = updated_raksts.Virsraksts;
+                if (updated_raksts.Saturs != null) raksts.Saturs = updated_raksts.Saturs;
+                await SaveOrUpdate(raksts);
+                return true;
+            }
+
+            return false;
+        }
     }
 }
