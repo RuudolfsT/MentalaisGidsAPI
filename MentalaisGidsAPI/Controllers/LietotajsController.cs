@@ -181,7 +181,7 @@ namespace MentalaisGidsAPI.Controllers
 
             if (!string.IsNullOrEmpty(lietotajsEditDto.Epasts))
             {
-                if (!lietotajsEditDto.Epasts.Contains("@"))
+                if (!lietotajsEditDto.Epasts.Contains('@'))
                 {
                     status.AddError(Resources.InvalidEmail);
                     return status;
