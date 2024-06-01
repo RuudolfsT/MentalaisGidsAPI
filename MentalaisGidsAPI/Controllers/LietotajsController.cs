@@ -6,7 +6,6 @@ using MentalaisGidsAPI.Domain.Dto;
 using MentalaisGidsAPI.Properties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ServiceLayer.Interface;
 using System.Security.Claims;
 
@@ -69,7 +68,7 @@ namespace MentalaisGidsAPI.Controllers
             return Ok(lietotaji);
         }
 
-        // GET: api/Lietotajs/5
+        [Authorize(Roles = RoleUtils.Visi)]
         [HttpGet("{id}")]
         public async Task<ActionResult<Lietotajs>> GetLietotajs(int id)
         {
@@ -100,8 +99,7 @@ namespace MentalaisGidsAPI.Controllers
         }
 
         [Authorize(Roles = RoleUtils.Admins)]
-        [HttpPost]
-        [Route("AssignRole")]
+        [HttpPost("AssignRole")]
         public async Task<ActionResult<Status>> AssignRole(LietotajsLomaDto lietotajsLomaDto)
         {
             var status = new Status(true);
@@ -183,7 +181,7 @@ namespace MentalaisGidsAPI.Controllers
 
             if (!string.IsNullOrEmpty(lietotajsEditDto.Epasts))
             {
-                if (!lietotajsEditDto.Epasts.Contains("@"))
+                if (!lietotajsEditDto.Epasts.Contains('@'))
                 {
                     status.AddError(Resources.InvalidEmail);
                     return status;
