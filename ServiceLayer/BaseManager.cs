@@ -18,6 +18,11 @@ namespace ServiceLayer
             return await _context.Set<T>().FindAsync(id);
         }
 
+        public async Task<T> FindByNameId(string id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
         public async Task<T> SaveOrUpdate(T entity) // varbūt nāksies pielabot
         {
             var entry = _context.Entry(entity);

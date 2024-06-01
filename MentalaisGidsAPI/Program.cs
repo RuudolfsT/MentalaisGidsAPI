@@ -55,7 +55,10 @@ namespace MentalaisGidsAPI
                 options.AddPolicy("Parastais lietotājs", policy => policy.RequireRole("Parastais lietotājs"));
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidateModelAttribute>();
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -75,7 +78,7 @@ namespace MentalaisGidsAPI
             builder.Services.AddScoped<IJwt, Jwt>();
             builder.Services.AddScoped<ILietotajsManager, LietotajsManager>();
             builder.Services.AddScoped(typeof(IBaseManager<>), typeof(BaseManager<>));
-
+            builder.Services.AddScoped<ILietotajsLomaManager, LietotajsLomaManager>();
 
             var app = builder.Build();
 

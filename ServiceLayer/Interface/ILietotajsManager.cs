@@ -8,5 +8,8 @@ namespace ServiceLayer.Interface
         AuthenticateResponse? Authenticate(AuthenticateRequest model);
         IEnumerable<Lietotajs> GetAll();
         RegisterResponse? Register(RegisterRequest model);
+        Task<bool> UserExists(int id);
+        Task<bool> UsernameExists(string username);
+        string HashPassword(string password, Lietotajs user);
     }
 }

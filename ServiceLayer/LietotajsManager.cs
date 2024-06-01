@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Auth;
 using MentalaisGidsAPI.Domain;
+using MentalaisGidsAPI.Domain.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
@@ -91,18 +92,21 @@ namespace ServiceLayer
             return _context.Lietotajs;
         }
 
-        //public void Delete(Lietotajs model)
-        //{
-        //    _context.Lietotajs.Remove(model);
-        //    _context.SaveChanges();
-        //}
+        public async Task<bool> UserExists(int id)
+        {
+            return _context.Set<Lietotajs>().Any(x => x.LietotajsID == id);
+        }
 
+        public async Task<bool> UsernameExists(string username)
+        {
+            return _context.Set<Lietotajs>().Any(x => x.Lietotajvards == username);
+        }
 
-        //public async Task<LietotajsLoma> AssignLoma(int userId, int roleId)
-        //{
-
-
-        //}
-
+        public string HashPassword(string password, Lietotajs user)
+        {
+            var passwordHasher = new PasswordHasher<Lietotajs>();
+            var hashedPassword = passwordHasher.HashPassword(user, password);
+            return hashedPassword;
+        }
     }
 }

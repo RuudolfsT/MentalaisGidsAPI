@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MentalaisGidsAPI.Domain.dto
+namespace MentalaisGidsAPI.Domain.Dto
 {
     // DataAnnotations:
     // https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations?view=net-8.0

@@ -4,6 +4,6 @@ namespace ServiceLayer.Interface
 {
     public interface ILomaManager : IBaseManager<Loma>
     {
-        //Task<Loma> GetLoma(int id);
+        Task<bool> RoleExists(string id);
     }
 }
