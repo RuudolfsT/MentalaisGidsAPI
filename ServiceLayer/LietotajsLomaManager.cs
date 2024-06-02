@@ -1,5 +1,6 @@
 ﻿using MentalaisGidsAPI.Domain;
 using ServiceLayer.Interface;
+using ServiceLayer.Manager;
 
 namespace ServiceLayer
 {

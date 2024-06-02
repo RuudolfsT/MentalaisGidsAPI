@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
-namespace ServiceLayer
+namespace ServiceLayer.Manager
 {
     public class BaseManager<T> : IBaseManager<T>
         where T : class

@@ -6,7 +6,7 @@ using ServiceLayer.Interface;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
-namespace ServiceLayer
+namespace ServiceLayer.Manager
 {
     public class RakstsManager : BaseManager<Raksts>, IRakstsManager
     {
