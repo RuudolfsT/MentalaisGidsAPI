@@ -1,4 +1,5 @@
-﻿using DomainLayer.Enum;
+﻿using DomainLayer.dto;
+using DomainLayer.Enum;
 using MentalaisGidsAPI.Domain;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
@@ -43,6 +44,36 @@ namespace ServiceLayer.Manager
             _context.Dialogs.Remove(dialogue);
             await _context.SaveChangesAsync();
 
+            return true;
+        }
+        public async Task<bool> StartDialogue(int receiverId)
+        {
+            var userId = _userService.GetUserId();
+            var dialogue = await _context.Dialogs.FirstOrDefaultAsync(x => 
+                                                                    (x.LietotajsID == userId && x.SpecialistsID == receiverId)
+                                                                    ||
+                                                                    x.LietotajsID == receiverId && x.SpecialistsID == userId);
+            // Ja dialogs jau eksistē, tad nav nepieciešams veidot jaunu
+            if (dialogue != null)
+            {
+                return false;
+            }
+
+            var isSpecialist = await _context.LietotajsLoma.AnyAsync(x => x.LietotajsID == receiverId && x.LomaNosaukums == RoleUtils.Specialists);
+
+            // Ja saņēmējs nav speciālists, tad dialogs netiek izveidots
+            if (isSpecialist == false)
+            {
+                return false;
+            }
+
+            var newDialogue = new Dialogs
+            {
+                LietotajsID = userId,
+                SpecialistsID = receiverId
+            };
+
+            await SaveOrUpdate(newDialogue);
             return true;
         }
     }

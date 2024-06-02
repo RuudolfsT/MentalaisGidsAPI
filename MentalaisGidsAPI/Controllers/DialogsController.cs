@@ -29,5 +29,19 @@ namespace MentalaisGidsAPI.Controllers
 
             return Ok();
         }
+
+        [Authorize(Roles = RoleUtils.ParastsLietotajs)]
+        [HttpPost("start")]
+        public async Task<IActionResult> StartDialogue(int receiverId)
+        {
+            var result = await _dialogsManager.StartDialogue(receiverId);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
     }
 }
