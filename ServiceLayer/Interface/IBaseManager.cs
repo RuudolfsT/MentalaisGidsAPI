@@ -3,7 +3,8 @@
     public interface IBaseManager<T>
     {
         Task<T> FindById(int id);
+        Task<T> FindByNameId(string id);
         Task<T> SaveOrUpdate(T entity);
-        void Delete(T entity);
+        Task Delete(T entity);
     }
 }

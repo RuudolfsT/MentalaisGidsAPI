@@ -18,15 +18,20 @@ namespace ServiceLayer.Manager
             return await _context.Set<T>().FindAsync(id);
         }
 
+        public async Task<T> FindByNameId(string id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
         public async Task<T> SaveOrUpdate(T entity) // varbūt nāksies pielabot
         {
             var entry = _context.Entry(entity);
             if (entry.State == EntityState.Detached)
             {
                 var set = _context.Set<T>();
-                var key = _context.Model?.FindEntityType(typeof(T))?.FindPrimaryKey()?.Properties?.FirstOrDefault();
-                var keyValue = key?.PropertyInfo?.GetValue(entity, null);
-                var exists = set.Find(keyValue);
+                var keys = _context.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties;
+                var keyValues = keys.Select(k => k.PropertyInfo.GetValue(entity)).ToArray();
+                var exists = set.Find(keyValues);
 
                 if (exists != null)
                 {
@@ -42,7 +47,7 @@ namespace ServiceLayer.Manager
             return entity;
         }
 
-        public async void Delete(T entity)
+        public async Task Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
