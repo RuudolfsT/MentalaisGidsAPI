@@ -95,7 +95,7 @@ namespace ServiceLayer
                     .Where(lrv => lrv.RakstsID == raksts.RakstsID)
                     .Select(lrv => (int?)lrv.Balles)
                     .DefaultIfEmpty()
-                    .Average() ?? null, // Calculate average here
+                    .Average() ?? null,
                 Komentari = null,
                 KomentariCount = raksts.LietotajsRakstsKomentars.Count
             }).ToListAsync();
@@ -123,7 +123,7 @@ namespace ServiceLayer
                 SpecialistsID = user_id,
                 Virsraksts = new_raksts_dto.Virsraksts,
                 Saturs = new_raksts_dto.Saturs,
-                DatumsUnLaiks = DateTime.UtcNow
+                DatumsUnLaiks = DateTime.Now
             });
 
             return new RakstsCreateResponseDto()
