@@ -1,9 +1,8 @@
 ﻿using MentalaisGidsAPI.Domain;
 using MentalaisGidsAPI.Domain.Dto;
 using ServiceLayer.Interface;
-using ServiceLayer.Manager;
 
-namespace ServiceLayer
+namespace ServiceLayer.Manager
 {
     public class LietotajsRakstsVertejumsManager : BaseManager<LietotajsRakstsVertejums>, ILietotajsRakstsVertejumsManager
     {
