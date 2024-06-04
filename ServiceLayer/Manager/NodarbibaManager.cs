@@ -5,7 +5,7 @@ using MentalaisGidsAPI.Domain.Dto;
 using Microsoft.EntityFrameworkCore;
 using ServiceLayer.Interface;
 
-namespace ServiceLayer
+namespace ServiceLayer.Manager
 {
     public class NodarbibaManager : BaseManager<Nodarbiba>, INodarbibaManager
     {
