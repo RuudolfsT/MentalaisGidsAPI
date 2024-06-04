@@ -1,5 +1,8 @@
+# Mentālais Gids API
+![image](https://github.com/RuudolfsT/MentalaisGidsAPI/assets/108159222/be72f854-cb8c-48c1-b893-793fe200b116)
+
 **WIKI dokumenta links:**
-https://docs.google.com/document/d/1r0RtyLwy5OK2YarYzdDctuJ3I8ksDmYkc2xJWgYUPXc/edit?usp=sharing
+[Dokumentācija](2D_MENTALAIS_GIDS-1.pdf)
 
 ## Pakotņu diagramma:
 - MentalaisGidsAPI - nodrošina API funkciju pieejamību, izmantojot kontrolieru metodes
